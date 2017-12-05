@@ -23,8 +23,7 @@
 - **12.0** : latest 12.0.x version (stable)
 - **11.0** : latest 11.0.x version (old stable)
 
-
-Other tags than `daily` are built weekly. For security reasons, you should occasionally update the container, even if you have the latest version of Nextcloud.
+For security reasons, you should occasionally update the container, even if you have the latest version of Nextcloud.
 
 ### Build-time variables
 - **NEXTCLOUD_VERSION** : version of nextcloud
@@ -68,7 +67,7 @@ Basically, you can use a database instance running on the host or any other mach
 Pull the image and create a container. `/docker` can be anywhere on your host, this is just an example. Change `MYSQL_ROOT_PASSWORD` and `MYSQL_PASSWORD` values (mariadb). You may also want to change UID and GID for Nextcloud, as well as other variables (see *Environment Variables*).
 
 ```
-docker pull wonderfall/nextcloud:10.0 && docker pull mariadb:10
+docker pull motius/nextcloud:10.0 && docker pull mariadb:10
 
 docker run -d --name db_nextcloud \
        -v /docker/nextcloud/db:/var/lib/mysql \
@@ -97,7 +96,7 @@ docker run -d --name nextcloud \
        -e DB_USER=nextcloud \
        -e DB_PASSWORD=supersecretpassword \
        -e DB_HOST=db_nextcloud \
-       wonderfall/nextcloud:10.0
+       motius/nextcloud:10.0
 ```
 
 You are **not obliged** to use `ADMIN_USER` and `ADMIN_PASSWORD`. If these variables are not provided, you'll be able to configure your admin acccount from your browser.
@@ -105,9 +104,6 @@ You are **not obliged** to use `ADMIN_USER` and `ADMIN_PASSWORD`. If these varia
 **Below you can find a docker-compose file, which is very useful!**
 
 Now you have to use a **reverse proxy** in order to access to your container through Internet, steps and details are available at the end of the README.md. And that's it! Since you already configured Nextcloud through setting environment variables, there's no setup page.
-
-### ARM-based devices
-You will have to build yourself using an Alpine-ARM image, like `orax/alpine-armhf:edge`.
 
 ### Configure
 In the admin panel, you should switch from `AJAX cron` to `cron` (system cron).
@@ -130,7 +126,7 @@ networks:
 
 services:
   nextcloud:
-    image: wonderfall/nextcloud
+    image: motius/nextcloud:12
     depends_on:
       - nextcloud-db           # If using MySQL
       - solr                   # If using Nextant
@@ -212,39 +208,5 @@ There is a script for that, so you shouldn't bother to log into the container, s
 Of course you can use your own solution! nginx, Haproxy, Caddy, h2o, Traefik...
 
 Whatever your choice is, you have to know that headers are already sent by the container, including HSTS, so there's no need to add them again. **It is strongly recommended (I'd like to say : MANDATORY) to use Nextcloud through an encrypted connection (HTTPS).** [Let's Encrypt](https://letsencrypt.org/) provides free SSL/TLS certificates, so you have no excuses.
-
-You can take a look at my brand new image [wonderfall/reverse](https://hub.docker.com/r/wonderfall/reverse/). It was made with security and ease-of-use in mind, using the latest versions of nginx and OpenSSL. It also provides SSL/TLS automation with [lego](https://github.com/xenolf/lego), a Let's Encrypt client. Also, no need to bother about configuration files! This image does litterally everything for you.
-
-Look at how simple it is. First, you have to add labels to your Nextcloud container, like this:
-
-```
-  nextcloud:
-  ...
-    labels:
-      - reverse.frontend.domain=cloud.domain.tld
-      - reverse.backend.port=8888
-      - reverse.frontend.ssl=true
-      - reverse.frontend.ssltype=ec384
-      - reverse.frontend.hsts=false
-      - reverse.frontend.headers=false
-```
-
-These labels can tell the reverse container what settings should be set when generating files/certificates for Nextcloud. Now you can add the reverse container in your docker-compose file, and you need to provide it your `EMAIL` (for Let's Encrypt), and bind it to the nextcloud container :
-
-```
-  reverse:
-    image: wonderfall/reverse
-    container_name: reverse
-    ports:
-      - "80:8080"
-      - "443:8443"
-    environment:
-      - EMAIL=admin@domain.tld
-    volumes:
-      - /docker/reverse/ssl:/nginx/ssl
-      - /var/run/docker.sock:/var/run/docker.sock
-    depends_on:
-      - nextcloud
-```
 
 That's it! Did I lie to you?
