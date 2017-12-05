@@ -124,6 +124,8 @@ COPY rootfs /
 RUN NB_CORES=${BUILD_CORES-$(getconf _NPROCESSORS_CONF)} \
 ### Packages installation
  && BUILD_DEPS=" \
+    re2c \
+    bison \
     file \
     linux-headers \
     libtool \
@@ -164,9 +166,9 @@ RUN NB_CORES=${BUILD_CORES-$(getconf _NPROCESSORS_CONF)} \
  && mkdir -p /usr/src \
  && tar xzf /tmp/nginx-${NGINX_VER}.tar.gz -C /usr/src \
  && tar xzvf /tmp/php-${PHP_VER}.tar.gz -C /usr/src \
- && tar xzf /tmp/libiconv-${LIBICONV_VERSION}.tar.gz -C /usr/src 
+ && tar xzf /tmp/libiconv-${LIBICONV_VERSION}.tar.gz -C /usr/src \
 ### nginx installation
-RUN cd /usr/src/nginx-${NGINX_VER} \
+ && cd /usr/src/nginx-${NGINX_VER} \
  && ./configure --with-cc-opt="-O3 -fPIE -fstack-protector-strong" ${NGINX_CONF} \
  && make -j ${NB_CORES} \
  && make install \
