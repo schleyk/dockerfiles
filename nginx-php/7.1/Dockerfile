@@ -1,13 +1,13 @@
-FROM alpine:3.6
+FROM alpine:3.7
 
 ARG BUILD_CORES
 
-ARG NGINX_VER=1.13.6
-ARG PHP_VER=7.1.11
+ARG NGINX_VER=1.13.7
+ARG PHP_VER=7.1.12
 ARG LIBICONV_VERSION=1.15
 
 LABEL description="nginx + php image based on Alpine" \
-      maintainer="Wonderfall <wonderfall@targaryen.house>" \
+      maintainer="Motius <info@motius.de>" \
       php_version="PHP v$PHP_VER built from source" \
       nginx_version="nginx v$NGINX_VER built from source"
 
@@ -122,9 +122,9 @@ ARG CUSTOM_PKGS=" \
 COPY rootfs /
 
 RUN NB_CORES=${BUILD_CORES-$(getconf _NPROCESSORS_CONF)} \
-
 ### Packages installation
  && BUILD_DEPS=" \
+    file \
     linux-headers \
     libtool \
     build-base \
@@ -154,7 +154,6 @@ RUN NB_CORES=${BUILD_CORES-$(getconf _NPROCESSORS_CONF)} \
     pcre \
     zlib \
     ${CUSTOM_PKGS} \
-
 ### Source downloading
  && wget http://nginx.org/download/nginx-${NGINX_VER}.tar.gz -O /tmp/nginx-${NGINX_VER}.tar.gz \
  && wget http://nginx.org/download/nginx-${NGINX_VER}.tar.gz.asc -O /tmp/nginx-${NGINX_VER}.tar.gz.asc \
@@ -165,26 +164,22 @@ RUN NB_CORES=${BUILD_CORES-$(getconf _NPROCESSORS_CONF)} \
  && mkdir -p /usr/src \
  && tar xzf /tmp/nginx-${NGINX_VER}.tar.gz -C /usr/src \
  && tar xzvf /tmp/php-${PHP_VER}.tar.gz -C /usr/src \
- && tar xzf /tmp/libiconv-${LIBICONV_VERSION}.tar.gz -C /usr/src \
-
+ && tar xzf /tmp/libiconv-${LIBICONV_VERSION}.tar.gz -C /usr/src 
 ### nginx installation
- && cd /usr/src/nginx-${NGINX_VER} \
+RUN cd /usr/src/nginx-${NGINX_VER} \
  && ./configure --with-cc-opt="-O3 -fPIE -fstack-protector-strong" ${NGINX_CONF} \
  && make -j ${NB_CORES} \
  && make install \
-
 ### GNU Libiconv installation
  && cd /usr/src/libiconv-${LIBICONV_VERSION} \
  && ./configure --prefix=/usr/local \
  && make && make install && libtool --finish /usr/local/lib \
-
 ### PHP installation
  && mv /usr/src/php-${PHP_VER} /usr/src/php \
  && cd /usr/src/php \
  && ./configure CFLAGS="-O3 -fstack-protector-strong" ${PHP_CONF} \
  && make -j ${NB_CORES} \
  && make install \
-
 ### Strip, clean, install modules
  && { find /usr/local/bin /usr/local/sbin -type f -perm +0111 -exec strip --strip-all '{}' + || true; } \
  && make clean \

@@ -1,8 +1,3 @@
-![nginx-php](http://apmblog.dynatrace.com/wp-content/uploads/2014/10/PHP-on-Nginx.jpg)
-
-> This image is build and push with [drone.io](https://github.com/drone/drone), a circle-ci like self-hosted.
-> If you don't trust, you can build yourself.
-
 ## Description
 What is [Nginx](http://nginx.org)?
 
@@ -18,11 +13,9 @@ Fast, flexible and pragmatic, PHP powers everything from your blog to the most p
 ### Build arguments
 * BUILD_CORES : Number of cpu's core for compile (default : empty for use all cores)
 * NGINX_VER : Nginx version (default : latest version)
-* NGINX_GPG : Nginx gpg fingerprint
 * NGINX_CONF : Nginx build arguments (default : see Dockerfile)
 * PHP_VER : PHP version (default : latest version)
 * PHP_MIRROR: Mirror for download PHP (default : http://fr2.php.net)
-* PHP_GPG : PHP gpg fingerprint
 * PHP_CONF : PHP build arguments (default : see Dockerfile)
 * PHP_EXT_LIST : PHP extensions list, for install there (default : see Dockerfile)
 * CUSTOM_BUILD_PKGS : Necessary packages for build PHP extension, there packages are remove after build (default : see Dockerfile)
@@ -30,7 +23,7 @@ Fast, flexible and pragmatic, PHP powers everything from your blog to the most p
 
 ### simple build
 ```shell
-docker build -t xataz/nginx-php github.com/xataz/dockerfiles.git#master:nginx-php
+docker build -t motius/nginx-php:7.1 .
 ```
 
 ### Build with arguments
@@ -41,15 +34,10 @@ docker build -t xataz/nginx-php \
         --build-arg PHP_EXT_LIST="gd mysqli gmp" \
         --build-arg CUSTOM_BUILD_PKGS="freetype-dev gmp-dev" \
         --build-arg CUSTOM_PKGS="freetype gmp" \
-        github.com/xataz/dockerfiles.git#master:nginx-php
+        motius/nginx-php:7.1
 ```
 
-
 ## Configuration
-### Environments
-* UID : Choose uid for launch rtorrent (default : 991)
-* GID : Choose gid for launch rtorrent (default : 991)
-
 ### Volumes
 * /nginx/sites-enabled : Place your vhost here
 * /nginx/log : Log emplacement
@@ -70,11 +58,10 @@ location ~ \.php$ {
 ### Ports
 * 8080
 
-
 ## Usage
 ### Simple launch
 ```shell
-docker run -d -p 8080:8080 xataz/nginx-php
+docker run -d -p 8080:8080 motius/nginx-php:7.1
 ```
 URI access : http://XX.XX.XX.XX:8080
 
@@ -83,9 +70,7 @@ URI access : http://XX.XX.XX.XX:8080
 docker run -d -p 80:8080 -p 443:8443 \
 	  -v /docker/nginx/sites-enabled:/nginx/sites-enabled \
       -v /docker/nginx/certs:/nginx/certs \
-	  -e UID=1001 \
-	  -e GID=1001 \
-	xataz/nginx-php
+	motius/nginx-php:7.1
 ```
 URI access : http://XX.XX.XX.XX
 
