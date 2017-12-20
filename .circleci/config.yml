@@ -1,0 +1,75 @@
+version: 2
+jobs:
+  build:
+    working_directory: /app
+    docker:
+      - image: docker:17.05.0-ce-git
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build nextcloud 12.0.4
+          command: |
+            cd nextcloud
+            docker build -t motius/nextcloud:12.0.4 -f Dockerfile.12.0 .
+      - run:
+          name: Build nextcloud 11.0.5
+          command: |
+            cd nextcloud
+            docker build -t motius/nextcloud:11.0.5 -f Dockerfile.11.0 .
+      - run:
+          name: Tag images
+          command: |
+            docker tag motius/nextcloud:12.0.4 motius/nextcloud:latest
+            docker tag motius/nextcloud:12.0.4 motius/nextcloud:12
+            docker tag motius/nextcloud:11.0.5 motius/nextcloud:11
+      - run:
+          name: Push to hub
+          command: |
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker push motius/nextcloud:latest
+            docker push motius/nextcloud:12.0.4
+            docker push motius/nextcloud:12
+            docker push motius/nextcloud:11.0.5
+            docker push motius/nextcloud:11
+  build-nginx:
+    working_directory: /app
+    docker:
+      - image: docker:17.05.0-ce-git
+    steps:
+      - run:
+          name: Build nginx:7.1
+          command: |
+            cd nginx-php/7.1
+            docker build -t motius/nginx-php:7.1 .
+      - run:
+          name: Push to hub
+          command: |
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker push motius/nginx-php:7.1
+
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build
+  nightly:
+    triggers:
+      - schedule:
+          cron: "0 0 * * *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - build-nginx
+      - deploy-nginx:
+          requires:
+            - build
+      - build:
+          requires:
+            - deploy-nginx
+      - deploy:
+          requires:
+            - build-owncloud
