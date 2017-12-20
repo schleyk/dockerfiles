@@ -27,7 +27,7 @@ jobs:
           name: Build nginx:7.1
           command: |
             cd nginx-php/7.1
-            docker build -t motius/nginx-php:7.1
+            docker build -t motius/nginx-php:7.1 .
 
   deploy:
     working_directory: /app
