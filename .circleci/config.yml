@@ -32,7 +32,6 @@ jobs:
             docker push motius/nextcloud:12
             docker push motius/nextcloud:11.0.5
             docker push motius/nextcloud:11
-
   build-nginx:
     working_directory: /app
     docker:
@@ -52,6 +51,9 @@ jobs:
 
 workflows:
   version: 2
+  build:
+    jobs:
+      - build
   nightly:
     triggers:
       - schedule:
@@ -62,6 +64,12 @@ workflows:
                 - master
     jobs:
       - build-nginx
+      - deploy-nginx:
+          requires:
+            - build
       - build:
           requires:
-            - build-nginx
+            - deploy-nginx
+      - deploy:
+          requires:
+            - build-owncloud
