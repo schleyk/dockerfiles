@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  build-nextcloud:
+  build:
     working_directory: /app
     docker:
       - image: docker:17.05.0-ce-git
@@ -46,7 +46,7 @@ jobs:
             docker login -u $DOCKER_USER -p $DOCKER_PASS
             docker push motius/nginx-php:7.1
 
-  deploy-nextcloud:
+  deploy:
     working_directory: /app
     docker:
       - image: docker:17.05.0-ce-git
@@ -66,8 +66,8 @@ workflows:
   version: 2
   build_and_deploy:
     jobs:
-      - build-nextcloud
-      - deploy-nextcloud:
+      - build
+      - deploy:
           requires:
             - build
   nightly:
@@ -83,9 +83,9 @@ workflows:
       - deploy-nginx:
           requires:
             - build
-      - build-owncloud:
+      - build:
           requires:
             - deploy-nginx
-      - deploy-owncloud:
+      - deploy:
           requires:
             - build-owncloud
