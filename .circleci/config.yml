@@ -1,0 +1,23 @@
+machine:
+  services:
+    - docker
+
+dependencies:
+  override:
+    - docker info
+    - cd nextcloud
+    - docker build -t motius/nextcloud:12.0.4 -f Dockerfile.12.0 .
+    - docker build -t motius/nextcloud:11.0.5 -f Dockerfile.11.0 .
+    - docker tag motius/nextcloud:12.0.4 motius/nextcloud:12
+    - docker tag motius/nextcloud:11.0.5 motius/nextcloud:11
+
+deployment:
+  hub:
+    branch: master
+    commands:
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+      - docker push motius/nextcloud:12.0.4
+      - docker push motius/nextcloud:12
+      - docker push motius/nextcloud:11
+      - docker push motius/nextcloud:11.0.4
+
