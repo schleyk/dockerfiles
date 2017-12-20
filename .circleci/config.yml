@@ -23,6 +23,15 @@ jobs:
             docker tag motius/nextcloud:12.0.4 motius/nextcloud:latest
             docker tag motius/nextcloud:12.0.4 motius/nextcloud:12
             docker tag motius/nextcloud:11.0.5 motius/nextcloud:11
+      - run:
+          name: Push to hub
+          command: |
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker push motius/nextcloud:latest
+            docker push motius/nextcloud:12.0.4
+            docker push motius/nextcloud:12
+            docker push motius/nextcloud:11.0.5
+            docker push motius/nextcloud:11
 
   build-nginx:
     working_directory: /app
@@ -34,42 +43,15 @@ jobs:
           command: |
             cd nginx-php/7.1
             docker build -t motius/nginx-php:7.1 .
-
-  deploy-nginx:
-    working_directory: /app
-    docker:
-      - image: docker:17.05.0-ce-git
-    steps:
       - run:
           name: Push to hub
           command: |
             docker login -u $DOCKER_USER -p $DOCKER_PASS
             docker push motius/nginx-php:7.1
 
-  deploy:
-    working_directory: /app
-    docker:
-      - image: docker:17.05.0-ce-git
-    steps:
-      - setup_remote_docker
-      - run:
-          name: Push to hub
-          command: |
-            docker login -u $DOCKER_USER -p $DOCKER_PASS
-            docker push motius/nextcloud:latest
-            docker push motius/nextcloud:12.0.4
-            docker push motius/nextcloud:12
-            docker push motius/nextcloud:11.0.5
-            docker push motius/nextcloud:11
 
 workflows:
   version: 2
-  build_and_deploy:
-    jobs:
-      - build
-      - deploy:
-          requires:
-            - build
   nightly:
     triggers:
       - schedule:
@@ -80,12 +62,6 @@ workflows:
                 - master
     jobs:
       - build-nginx
-      - deploy-nginx:
-          requires:
-            - build
       - build:
           requires:
-            - deploy-nginx
-      - deploy:
-          requires:
-            - build-owncloud
+            - build-nginx
