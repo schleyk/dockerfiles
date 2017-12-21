@@ -64,12 +64,6 @@ workflows:
                 - master
     jobs:
       - build-nginx
-      - deploy-nginx:
-          requires:
-            - build
       - build:
           requires:
-            - deploy-nginx
-      - deploy:
-          requires:
-            - build-owncloud
+            - build-nginx
