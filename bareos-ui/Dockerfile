@@ -11,6 +11,7 @@ RUN curl -Ls http://download.bareos.org/bareos/release/latest/CentOS_7/bareos.re
   && yum -y install \
     bareos-webui \
     openssl \
+    perl \
   && yum clean all \
   && mv /etc/bareos-webui/directors.ini /etc/bareos-webui/directors.ini.default \
 # Patch session timeout, 60s is way too short
