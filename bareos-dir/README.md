@@ -5,13 +5,16 @@
 ![](https://img.shields.io/docker/build/motius/bareos-dir.svg)
 
 Based on https://github.com/shoifele/bareos-dir
-## Features
+### Features
 - Automatic generation of template config
 - Creation or migration of the database (catalog)
 - Mail handling
 
-## Sample docker-compose
+### Tags
+- **latest** : latest stable version. (16.2)
+- **16.2** : latest 16.2 version
 
+### Sample docker-compose.yml
 ```
 version: "2.1"
 services:
@@ -107,12 +110,6 @@ services:
 
 networks:
   bareos:
-    driver: bridge
-    ipam:
-        driver: default
-        config:
-            -
-              subnet: 172.42.0.0/24
 ```
 
 This will create a sample configuration for Bareos using the templates given:
@@ -124,3 +121,8 @@ This will create a sample configuration for Bareos using the templates given:
 The container also takes care of setting some environment variables in the corresponding config files:
 - Messages.conf
 - Catalogs.conf
+
+### Important Mounts
+- **bareos-fd: /tmp/bareos-restores** On restoring the files are put here
+- **bareos-fd: /mnt** The default configuration uses this path as a base for the backups
+- **bareos-sd: /storage** The default configuration uses this path to store the backusp
