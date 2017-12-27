@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -e # Exit if any command errors
+
+# Create directors.ini from template
+if [ ! -e /etc/bareos-webui/directors.ini ]; then
+  perl -p -e 's/\$\{([^}]+)\}/defined $ENV{$1} ? $ENV{$1} : $&/eg; s/\$\{([^}]+)\}//eg' \
+  /etc/bareos-webui/directors.ini.tpl \
+  > /etc/bareos-webui/directors.ini
+fi
+
+exec /usr/sbin/httpd -D FOREGROUND

@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -e # Exit if any command errors
+
+# Run setup if eixists
+[ -x /etc/services.d/bareos-sd/setup ] && /etc/services.d/bareos-sd/setup
+
+# Copy default config if not exists
+[ ! -e /etc/bareos/$BAREOS_SD_CONF_FILE ] && cp /temp/$BAREOS_SD_CONF_FILE /etc/bareos/$BAREOS_SD_CONF_FILE && cp -rp /temp/sd.conf.d /etc/bareos/
+
+# (tail -F /var/log/bareos/bareos.log 2>/dev/null 1>/dev/stdout)&
+
+exec /usr/sbin/bareos-sd -f -c /etc/bareos/$BAREOS_SD_CONF_FILE
