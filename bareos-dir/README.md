@@ -13,7 +13,7 @@ Based on https://github.com/shoifele/bareos-dir
 ## Sample docker-compose
 
 ```
-version: "2"
+version: "2.1"
 services:
   # Bareos catalog
   postgres:
@@ -107,6 +107,12 @@ services:
 
 networks:
   bareos:
+    driver: bridge
+    ipam:
+        driver: default
+        config:
+            -
+              subnet: 172.42.0.0/24
 ```
 
 This will create a sample configuration for Bareos using the templates given:
