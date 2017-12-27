@@ -1,4 +1,8 @@
 # BareOS Director
+![](https://www.bareos.com/files/Logos/Bareos/Logo_gesamt.png)
+
+![](https://img.shields.io/docker/pulls/motius/bareos-dir.svg) ![](https://img.shields.io/github/commit-activity/y/motius/dockerfiles.svg) ![](https://img.shields.io/github/issues/motius/dockerfiles.svg) ![](https://img.shields.io/docker/automated/motius/bareos-dir.svg)
+![](https://img.shields.io/docker/build/motius/bareos-dir.svg)
 
 Based on https://github.com/shoifele/bareos-dir
 ## Features
