@@ -3,7 +3,7 @@ FROM centos:7.2.1511
 ENV REFRESHED_AT="2017-12-27" \
     BAREOS_SD_CONF_FILE=bareos-sd.conf
 
-RUN curl -Ls http://download.bareos.org/bareos/release/latest/CentOS_7/bareos.repo \
+RUN curl -Ls http://download.bareos.org/bareos/release/17.2/CentOS_7/bareos.repo \
     > /etc/yum.repos.d/bareos.repo \
   && yum -y install \
     bareos-storage \

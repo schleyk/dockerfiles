@@ -7,9 +7,9 @@ ENV REFRESHED_AT="2017-12-27" \
     DB_USER="bareos" \
     DB_PASS="bareos" \
     DB_PORT="5432" \
-    BAREOS_DB_VERSION="2004"
+    BAREOS_DB_VERSION="2171"
 
-RUN curl -Ls http://download.bareos.org/bareos/release/latest/CentOS_7/bareos.repo \
+RUN curl -Ls http://download.bareos.org/bareos/release/17.2/CentOS_7/bareos.repo \
     > /etc/yum.repos.d/bareos.repo \
   && yum -y install \
     git \

@@ -6,7 +6,7 @@ ENV REFRESHED_AT="2017-12-27" \
 # https://github.com/docker/hub-feedback/issues/461
 RUN yum -y install httpd || true ; yum clean all
 
-RUN curl -Ls http://download.bareos.org/bareos/release/latest/CentOS_7/bareos.repo \
+RUN curl -Ls http://download.bareos.org/bareos/release/17.2/CentOS_7/bareos.repo \
     > /etc/yum.repos.d/bareos.repo \
   && yum -y install \
     bareos-webui \
