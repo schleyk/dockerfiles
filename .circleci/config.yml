@@ -40,13 +40,14 @@ jobs:
       - run:
           name: Build nginx:7.1
           command: |
-            cd nginx-php/7.1
+            cd nginx-php
+            cd 7.1
             docker build -t motius/nginx-php:7.1 .
       - run:
           name: Push to hub
           command: |
             docker login -u $DOCKER_USER -p $DOCKER_PASS
-            docker push motius/nginx-php:7.1
+            docker push motChanged to two cds for nightly to figure out ius/nginx-php:7.1
 
 
 workflows:
