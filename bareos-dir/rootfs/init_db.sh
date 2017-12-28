@@ -54,7 +54,7 @@ if [ "$CUR_DB_VERSION" -lt "$BAREOS_DB_VERSION" ] ; then
     TO=`echo $i | cut -d"." -f 2 | cut -d"_" -f 2`
     if [ "$VERUP_CURR" = "$FROM" ] && [ "$VERUP_CURR" -lt "$BAREOS_DB_VERSION" ]; then
       echo "Apply Schema Update $i";
-      $PGSQL_CMD -f /usr/lib/bareos/scripts/ddl/updates/$i 1>/dev/null
+      $PGSQL_CMD -f $i 1>/dev/null
       VERUP_CURR=$TO
     fi
   done
