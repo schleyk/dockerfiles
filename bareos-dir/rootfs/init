@@ -15,9 +15,9 @@ set -e # Exit if any command errors
 ./certs.sh
 
 # Configure the recipients
-if [[ -z "$SMTP_RECIPIENTS" ]]
+if [[ -z "$SMTP_RECIPIENTS" && -z "$SMTP_OPERATORS" ]]
 then
-    echo "Please configure SMTP_RECIPIENTS"
+    echo "Please configure 'SMTP_RECIPIENTS' and 'SMTP_OPERATORS'"
     exit 1
 else
     echo "Configuring Messages.conf with correct recipients ..."
