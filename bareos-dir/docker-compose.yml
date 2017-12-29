@@ -1,22 +1,3 @@
-# BareOS Director
-![](https://www.bareos.com/files/Logos/Bareos/Logo_gesamt.png)
-
-![](https://img.shields.io/docker/pulls/motius/bareos-dir.svg) ![](https://img.shields.io/github/commit-activity/y/motius/dockerfiles.svg) ![](https://img.shields.io/github/issues/motius/dockerfiles.svg) ![](https://img.shields.io/docker/automated/motius/bareos-dir.svg)
-![](https://img.shields.io/docker/build/motius/bareos-dir.svg)
-
-Based on https://github.com/shoifele/bareos-dir
-### Features
-- Automatic generation of template config
-- Creation or migration of the database (catalog)
-- Mail handling
-
-### Tags
-- **latest** : latest stable version. (17.2)
-- **17.2** : latest 17.2 version
-- **16.2** : latest 16.2 version
-
-### Sample docker-compose.yml
-```
 version: "3"
 services:
   # Bareos catalog
@@ -111,19 +92,3 @@ services:
 
 networks:
   bareos:
-```
-
-This will create a sample configuration for Bareos using the templates given:
-- bareos-dir: [Sample files](https://github.com/motius/dockerfiles/tree/master/bareos-dir/rootfs/temp/conf) mount to `/etc/bareos`
-- bareos-fd: [Sample files](https://github.com/motius/dockerfiles/tree/master/bareos-fd/rootfs/temp) mount to `/etc/bareos`
-- bareos-sd: [Sample files](https://github.com/motius/dockerfiles/tree/master/bareos-sd/rootfs/temp) mount to `/etc/bareos`
-- bareos-ui: [Sample files](https://github.com/motius/dockerfiles/tree/master/bareos-sd/rootfs/temp) mount to  `/etc/bareos-webui`
-
-The container also takes care of setting some environment variables in the corresponding config files:
-- Messages.conf
-- Catalogs.conf
-
-### Important Mounts
-- **bareos-fd: /tmp/bareos-restores** On restoring the files are put here
-- **bareos-fd: /mnt** The default configuration uses this path as a base for the backups
-- **bareos-sd: /storage** The default configuration uses this path to store the backusp

@@ -21,15 +21,23 @@ then
     exit 1
 else
     echo "Configuring Messages.conf with correct recipients ..."
+    cp /temp/conf/dir.conf.d/Messages.conf /etc/bareos/dir.conf.d
     sed -i "s/root@localhost/$SMTP_RECIPIENTS/g" /etc/bareos/dir.conf.d/Messages.conf
+    sed -i "s/root@localhost/$SMTP_OPERATORS/g" /etc/bareos/dir.conf.d/Messages.conf
 fi
-echo "Configuring Catalog connection ... "
-sed -i "s/DB_HOST/$DB_HOST/g" /etc/bareos/dir.conf.d/Catalogs.conf
-sed -i "s/DB_PORT/$DB_PORT/g" /etc/bareos/dir.conf.d/Catalogs.conf
-sed -i "s/DB_NAME/$DB_NAME/g" /etc/bareos/dir.conf.d/Catalogs.conf
-sed -i "s/DB_USER/$DB_USER/g" /etc/bareos/dir.conf.d/Catalogs.conf
-sed -i "s/DB_PASS/$DB_PASS/g" /etc/bareos/dir.conf.d/Catalogs.conf
-
+if [[ -z "$DB_HOST" && -z "$DB_PORT" -z "$DB_NAME" -z "$DB_USER" -z "$DB_PASS"]]
+then
+    echo "Please configure 'DB_HOST', 'DB_PORT', 'DB_NAME', 'DB_USER' and 'DB_PASS'"
+    exit 1
+else
+    echo "Configuring Catalog connection ... "
+    cp /temp/conf/dir.conf.d/Messages.conf /etc/bareos/dir.conf.d
+    sed -i "s/DB_HOST/$DB_HOST/g" /etc/bareos/dir.conf.d/Catalogs.conf
+    sed -i "s/DB_PORT/$DB_PORT/g" /etc/bareos/dir.conf.d/Catalogs.conf
+    sed -i "s/DB_NAME/$DB_NAME/g" /etc/bareos/dir.conf.d/Catalogs.conf
+    sed -i "s/DB_USER/$DB_USER/g" /etc/bareos/dir.conf.d/Catalogs.conf
+    sed -i "s/DB_PASS/$DB_PASS/g" /etc/bareos/dir.conf.d/Catalogs.conf
+fi
 # Config test
 /usr/sbin/bareos-dir -t -c /etc/bareos/${BAREOS_DIR_CONF_FILE}
 
