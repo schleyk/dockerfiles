@@ -19,7 +19,7 @@
 - No root processes. Never.
 - Environment variables provided (see below).
 
-### Volumes### Tags
+### Tags
 - **latest** : latest stable version. (12.0)
 - **12.0** : latest 12.0.x version (stable)
 - **11.0** : latest 11.0.x version (old stable)
@@ -62,47 +62,12 @@ Don't forget to use a **strong password** for the admin account!
 - **/php/session** : php session files.
 
 ### Database
-Basically, you can use a database instance running on the host or any other machine. An easier solution is to use an external database container. I suggest you to use MariaDB, which is a reliable database server. You can use the official `mariadb` image available on Docker Hub to create a database container, which must be linked to the Nextcloud container. PostgreSQL can also be used as well.
+Basically, you can use a database instance running on the host or any other machine. An easier solution is to use an external database container. I suggest you to use MariaDB, which is a reliable database server. You can use the official `mariadb` image available on Docker Hub to create a database container, which must be linked to the Nextcloud container. PostgreSQL can also be used.
 
 ### Setup
 Pull the image and create a container. `/docker` can be anywhere on your host, this is just an example. Change `MYSQL_ROOT_PASSWORD` and `MYSQL_PASSWORD` values (mariadb). You may also want to change UID and GID for Nextcloud, as well as other variables (see *Environment Variables*).
 
-```
-docker pull motius/nextcloud:10.0 && docker pull mariadb:10
-
-docker run -d --name db_nextcloud \
-       -v /docker/nextcloud/db:/var/lib/mysql \
-       -e MYSQL_ROOT_PASSWORD=supersecretpassword \
-       -e MYSQL_DATABASE=nextcloud -e MYSQL_USER=nextcloud \
-       -e MYSQL_PASSWORD=supersecretpassword \
-       mariadb:10
-
-docker run -d --name nextcloud \
-       --link db_nextcloud:db_nextcloud \
-       -v /docker/nextcloud/data:/data \
-       -v /docker/nextcloud/config:/config \
-       -v /docker/nextcloud/apps:/apps2 \
-       -v /docker/nextcloud/themes:/nextcloud/themes \
-       -e UID=1000 -e GID=1000 \
-       -e UPLOAD_MAX_SIZE=10G \
-       -e APC_SHM_SIZE=128M \
-       -e OPCACHE_MEM_SIZE=128 \
-       -e CRON_PERIOD=15m \
-       -e TZ=Etc/UTC \
-       -e ADMIN_USER=mrrobot \
-       -e ADMIN_PASSWORD=supercomplicatedpassword \
-       -e DOMAIN=cloud.example.com \
-       -e DB_TYPE=mysql \
-       -e DB_NAME=nextcloud \
-       -e DB_USER=nextcloud \
-       -e DB_PASSWORD=supersecretpassword \
-       -e DB_HOST=db_nextcloud \
-       motius/nextcloud:10.0
-```
-
 You are **not obliged** to use `ADMIN_USER` and `ADMIN_PASSWORD`. If these variables are not provided, you'll be able to configure your admin acccount from your browser.
-
-**Below you can find a docker-compose file, which is very useful!**
 
 Now you have to use a **reverse proxy** in order to access to your container through Internet, steps and details are available at the end of the README.md. And that's it! Since you already configured Nextcloud through setting environment variables, there's no setup page.
 
@@ -119,7 +84,7 @@ I advise you to use [docker-compose](https://docs.docker.com/compose/), which is
 Don't copy/paste without thinking! It is a model so you can see how to do it correctly.
 
 ```
-version: '2'
+version: '3'
 
 networks:
   default:
@@ -133,26 +98,28 @@ services:
       - solr                   # If using Nextant
       - redis                  # If using Redis
     environment:
-      - UID=1000
-      - GID=1000
-      - UPLOAD_MAX_SIZE=10G
-      - APC_SHM_SIZE=128M
-      - OPCACHE_MEM_SIZE=128
-      - CRON_PERIOD=15m
-      - TZ=Europe/Berlin
-      - ADMIN_USER=admin            # Don't set to configure through browser
-      - ADMIN_PASSWORD=admin        # Don't set to configure through browser
-      - DOMAIN=localhost
-      - DB_TYPE=mysql
-      - DB_NAME=nextcloud
-      - DB_USER=nextcloud
-      - DB_PASSWORD=supersecretpassword
-      - DB_HOST=nextcloud-db
+      - "UID=1000"
+      - "GID=1000"
+      - "UPLOAD_MAX_SIZE=10G"
+      - "APC_SHM_SIZE=128M"
+      - "OPCACHE_MEM_SIZE=128"
+      - "CRON_PERIOD=15m"
+      - "TZ=Europe/Berlin"
+      - "ADMIN_USER=admin"            # Don't set to configure through browser
+      - "ADMIN_PASSWORD=admin"        # Don't set to configure through browser
+      - "DOMAIN=localhost"
+      - "DB_TYPE=mysql"
+      - "DB_NAME=nextcloud"
+      - "DB_USER=nextcloud"
+      - "DB_PASSWORD=supersecretpassword"
+      - "DB_HOST=nextcloud-db"
     volumes:
       - /docker/nextcloud/data:/data
       - /docker/nextcloud/config:/config
       - /docker/nextcloud/apps:/apps2
       - /docker/nextcloud/themes:/nextcloud/themes
+    networks:
+      - nextcloud
 
   # If using MySQL
   nextcloud-db:
@@ -160,10 +127,12 @@ services:
     volumes:
       - /docker/nextcloud/db:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=supersecretpassword
-      - MYSQL_DATABASE=nextcloud
-      - MYSQL_USER=nextcloud
-      - MYSQL_PASSWORD=supersecretpassword
+      - "MYSQL_ROOT_PASSWORD=supersecretpassword"
+      - "MYSQL_DATABASE=nextcloud"
+      - "MYSQL_USER=nextcloud"
+      - "MYSQL_PASSWORD=supersecretpassword"
+    networks:
+      - nextcloud
 
   # If using Nextant
   solr:
@@ -175,6 +144,8 @@ services:
       - docker-entrypoint.sh
       - solr-precreate
       - nextant
+    networks:
+      - nextcloud
 
   # If using Redis
   redis:
@@ -182,6 +153,11 @@ services:
     container_name: redis
     volumes:
       - /docker/nextcloud/redis:/data
+    networks:
+      - nextcloud
+
+networks:
+  - nextcloud
 ```
 
 You can update everything with `docker-compose pull` followed by `docker-compose up -d`.
@@ -203,7 +179,7 @@ Redis can be used for distributed and file locking cache, alongside with APCu (l
 You will have to deploy a Solr server, I've shown an example above with docker-compose. Once Nextant app is installed, go to "additional settings" in your admin pannel and use http://solr:8983/solr as "Adress of your Solr Servlet". There you go!
 
 ### Tip : how to use occ command
-There is a script for that, so you shouldn't bother to log into the container, set the right permissions, and so on. Just use `docker exec -ti nextcloud occ command`.
+There is a script for that, so you shouldn't bother to log into the container, set the right permissions, and so on. Just use `docker-compose exec nextcloud occ command`.
 
 ### Reverse proxy
 Of course you can use your own solution! nginx, Haproxy, Caddy, h2o, Traefik...
