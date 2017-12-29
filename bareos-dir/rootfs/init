@@ -22,8 +22,8 @@ then
 else
     echo "Configuring Messages.conf with correct recipients ..."
     cp /temp/conf/dir.conf.d/Messages.conf /etc/bareos/dir.conf.d
-    sed -i "s/root@localhost/$SMTP_RECIPIENTS/g" /etc/bareos/dir.conf.d/Messages.conf
-    sed -i "s/root@localhost/$SMTP_OPERATORS/g" /etc/bareos/dir.conf.d/Messages.conf
+    sed -i "s/SMTP_RECIPIENTS/$SMTP_RECIPIENTS/g" /etc/bareos/dir.conf.d/Messages.conf
+    sed -i "s/SMTP_OPERATORS/$SMTP_OPERATORS/g" /etc/bareos/dir.conf.d/Messages.conf
 fi
 if [[ -z "$DB_HOST" && -z "$DB_PORT" -z "$DB_NAME" -z "$DB_USER" -z "$DB_PASS"]]
 then
