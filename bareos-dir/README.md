@@ -1,11 +1,14 @@
 # BareOS Director
 ![](https://www.bareos.com/files/Logos/Bareos/Logo_gesamt.png)
 
-![](https://img.shields.io/docker/pulls/motius/bareos-dir.svg) ![](https://img.shields.io/github/commit-activity/y/motius/dockerfiles.svg) ![](https://img.shields.io/github/issues/motius/dockerfiles.svg) ![](https://img.shields.io/docker/automated/motius/bareos-dir.svg)
-![](https://img.shields.io/docker/build/motius/bareos-dir.svg)
+**This image was made and maintained for Motius and we have no intention to make this official. Support won't be regular so if there's an update, or a fix, you can open a pull request. Any contribution is welcome, but please be aware I'm very busy currently. Before opening an issue, please check if there's already one related. Also please use Github instead of Docker Hub, otherwise I won't see your comments. Thanks.**
+
+![](https://img.shields.io/docker/pulls/motius/bareos-dir.svg) ![](https://img.shields.io/github/commit-activity/y/motius/dockerfiles.svg) ![](https://img.shields.io/docker/automated/motius/bareos-dir.svg)
+![](https://img.shields.io/docker/build/motius/bareos-dir.svg) ![](https://circleci.com/gh/motius/dockerfiles/tree/master.svg?style=shield)
 
 Based on https://github.com/shoifele/bareos-dir
 ### Features
+- Build every night to keep the container up to date
 - Automatic generation of template config
 - Creation or migration of the database (catalog)
 - Mail handling
@@ -14,6 +17,31 @@ Based on https://github.com/shoifele/bareos-dir
 - **latest** : latest stable version. (17.2)
 - **17.2** : latest 17.2 version
 - **16.2** : latest 16.2 version
+
+### Environment variables
+- **TIMEZONE** Configures the timezone e.g. *Europe/Berlin*
+- **DB_HOST** Defines the database host e.g. *postgres*
+- **DB_PORT** Defines the password for the database e.g. *5432*
+- **DB_PASS** Defines the password for the database e.g. *bareos*
+- **DB_NAME** Defines the password for the database e.g. *bareos*
+- **DB_USER** Defines the password for the database e.g. *bareos*
+- **SMTP_ACCOUNT** SMTP login account e.g. *test@example.com*
+- **SMTP_FROM_ACCOUNT** The from in the mail e.g. *test@example.com*
+- **SMTP_PASSWORD** Login for the mail
+- **SMTP_SERVER** Mail server *smtp.gmail.com*
+- **SMTP_RECIPIENTS** Comma seperated list of users for all information mails
+- **SMTP_OPERATORS** Comma seperated list of users for all mails needing intervention
+
+### Volumes
+- **/etc/bareos**
+
+### Configuration
+This will create a sample configuration for Bareos using the templates given:
+- bareos-dir: [Sample files](https://github.com/motius/dockerfiles/tree/master/bareos-dir/rootfs/temp/conf) mount to `/etc/bareos`
+
+The container also takes care of setting some environment variables in the corresponding config files:
+- Messages.conf
+- Catalogs.conf
 
 ### Sample docker-compose.yml
 ```
@@ -112,18 +140,3 @@ services:
 networks:
   bareos:
 ```
-
-This will create a sample configuration for Bareos using the templates given:
-- bareos-dir: [Sample files](https://github.com/motius/dockerfiles/tree/master/bareos-dir/rootfs/temp/conf) mount to `/etc/bareos`
-- bareos-fd: [Sample files](https://github.com/motius/dockerfiles/tree/master/bareos-fd/rootfs/temp) mount to `/etc/bareos`
-- bareos-sd: [Sample files](https://github.com/motius/dockerfiles/tree/master/bareos-sd/rootfs/temp) mount to `/etc/bareos`
-- bareos-ui: [Sample files](https://github.com/motius/dockerfiles/tree/master/bareos-sd/rootfs/temp) mount to  `/etc/bareos-webui`
-
-The container also takes care of setting some environment variables in the corresponding config files:
-- Messages.conf
-- Catalogs.conf
-
-### Important Mounts
-- **bareos-fd: /tmp/bareos-restores** On restoring the files are put here
-- **bareos-fd: /mnt** The default configuration uses this path as a base for the backups
-- **bareos-sd: /storage** The default configuration uses this path to store the backusp

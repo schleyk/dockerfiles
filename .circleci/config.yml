@@ -1,6 +1,24 @@
 version: 2
 jobs:
-  build:
+  build-nginx:
+    working_directory: /app
+    docker:
+      - image: docker:17.05.0-ce-git
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build nginx:7.1
+          command: |
+            cd nginx-php/7.1
+            docker build -t motius/nginx-php:7.1 .
+      - run:
+          name: Push to hub
+          command: |
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker push motius/nginx-php:7.1
+
+  build-nextcloud:
     working_directory: /app
     docker:
       - image: docker:17.05.0-ce-git
@@ -13,48 +31,65 @@ jobs:
             cd nextcloud
             docker build -t motius/nextcloud:12.0.4 -f Dockerfile.12.0 .
       - run:
-          name: Build nextcloud 11.0.5
-          command: |
-            cd nextcloud
-            docker build -t motius/nextcloud:11.0.5 -f Dockerfile.11.0 .
-      - run:
           name: Tag images
           command: |
             docker tag motius/nextcloud:12.0.4 motius/nextcloud:latest
-            docker tag motius/nextcloud:12.0.4 motius/nextcloud:12
-            docker tag motius/nextcloud:11.0.5 motius/nextcloud:11
       - run:
           name: Push to hub
           command: |
             docker login -u $DOCKER_USER -p $DOCKER_PASS
             docker push motius/nextcloud:latest
             docker push motius/nextcloud:12.0.4
-            docker push motius/nextcloud:12
-            docker push motius/nextcloud:11.0.5
-            docker push motius/nextcloud:11
-  build-nginx:
+
+  build-bareos:
     working_directory: /app
     docker:
       - image: docker:17.05.0-ce-git
     steps:
+      - checkout
+      - setup_remote_docker
       - run:
-          name: Build nginx:7.1
+          name: Build bareos-dir
           command: |
-            cd nginx-php
-            cd 7.1
-            docker build -t motius/nginx-php:7.1 .
+            cd bareos-dir
+            docker build -t motius/bareos-dir:17.2 -f Dockerfile .
+      - run:
+          name: Build bareos-sd
+          command: |
+            cd bareos-sd
+            docker build -t motius/bareos-sd:17.2 -f Dockerfile .
+      - run:
+          name: Build bareos-fd
+          command: |
+            cd bareos-fd
+            docker build -t motius/bareos-fd:17.2 -f Dockerfile .
+      - run:
+          name: Build bareos-ui
+          command: |
+            cd bareos-ui
+            docker build -t motius/bareos-ui:17.2 -f Dockerfile .
+      - run:
+          name: Tag images
+          command: |
+            docker tag motius/bareos-dir:17.2 motius/bareos-dir
+            docker tag motius/bareos-fd:17.2 motius/bareos-fd
+            docker tag motius/bareos-sd:17.2 motius/bareos-sd
+            docker tag motius/bareos-ui:17.2 motius/bareos-ui
       - run:
           name: Push to hub
           command: |
             docker login -u $DOCKER_USER -p $DOCKER_PASS
-            docker push motChanged to two cds for nightly to figure out ius/nginx-php:7.1
-
+            docker tag motius/bareos-ui:17.2
+            docker tag motius/bareos-ui:latest
+            docker tag motius/bareos-dir:17.2
+            docker tag motius/bareos-dir:latest
+            docker tag motius/bareos-fd:17.2
+            docker tag motius/bareos-fd:latest
+            docker tag motius/bareos-sd:17.2
+            docker tag motius/bareos-sd:latest
 
 workflows:
   version: 2
-  build:
-    jobs:
-      - build
   nightly:
     triggers:
       - schedule:
@@ -65,6 +100,7 @@ workflows:
                 - master
     jobs:
       - build-nginx
-      - build:
+      - build-bareos
+      - build-nextcloud:
           requires:
             - build-nginx

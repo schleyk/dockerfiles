@@ -1,10 +1,11 @@
 ## motius/nextcloud
-
 ![](https://s32.postimg.org/69nev7aol/Nextcloud_logo.png)
 
 **This image was made and maintained for Motius and we have no intention to make this official. Support won't be regular so if there's an update, or a fix, you can open a pull request. Any contribution is welcome, but please be aware I'm very busy currently. Before opening an issue, please check if there's already one related. Also please use Github instead of Docker Hub, otherwise I won't see your comments. Thanks.**
 
+![](https://img.shields.io/docker/pulls/motius/nextcloud.svg) ![](https://img.shields.io/github/commit-activity/y/motius/dockerfiles.svg) ![](https://img.shields.io/docker/automated/motius/nextcloud.svg) ![](https://img.shields.io/docker/build/motius/nextcloud.svg) ![](https://circleci.com/gh/motius/dockerfiles/tree/master.svg?style=shield)
 ### Features
+- Build every night to keep the container up to date
 - Based on Alpine Linux 3.7.
 - Bundled with nginx and PHP 7.1 (motius/nginx-php image).
 - Automatic installation using environment variables.
@@ -18,7 +19,7 @@
 - No root processes. Never.
 - Environment variables provided (see below).
 
-### Tags
+### Volumes### Tags
 - **latest** : latest stable version. (12.0)
 - **12.0** : latest 12.0.x version (stable)
 - **11.0** : latest 11.0.x version (old stable)
@@ -75,7 +76,7 @@ docker run -d --name db_nextcloud \
        -e MYSQL_DATABASE=nextcloud -e MYSQL_USER=nextcloud \
        -e MYSQL_PASSWORD=supersecretpassword \
        mariadb:10
-       
+
 docker run -d --name nextcloud \
        --link db_nextcloud:db_nextcloud \
        -v /docker/nextcloud/data:/data \
@@ -163,7 +164,7 @@ services:
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
       - MYSQL_PASSWORD=supersecretpassword
-    
+
   # If using Nextant
   solr:
     image: solr:6-alpine
