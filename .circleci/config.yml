@@ -79,14 +79,14 @@ jobs:
           name: Push to hub
           command: |
             docker login -u $DOCKER_USER -p $DOCKER_PASS
-            docker tag motius/bareos-ui:17.2
-            docker tag motius/bareos-ui:latest
-            docker tag motius/bareos-dir:17.2
-            docker tag motius/bareos-dir:latest
-            docker tag motius/bareos-fd:17.2
-            docker tag motius/bareos-fd:latest
-            docker tag motius/bareos-sd:17.2
-            docker tag motius/bareos-sd:latest
+            docker push motius/bareos-ui:17.2
+            docker push motius/bareos-ui:latest
+            docker push motius/bareos-dir:17.2
+            docker push motius/bareos-dir:latest
+            docker push motius/bareos-fd:17.2
+            docker push motius/bareos-fd:latest
+            docker push motius/bareos-sd:17.2
+            docker push motius/bareos-sd:latest
 
 workflows:
   version: 2
