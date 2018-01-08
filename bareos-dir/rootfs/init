@@ -31,7 +31,7 @@ then
     exit 1
 else
     echo "Configuring Catalog connection ... "
-    cp /temp/conf/dir.conf.d/Messages.conf /etc/bareos/dir.conf.d
+    cp /temp/conf/dir.conf.d/Catalogs.conf /etc/bareos/dir.conf.d
     sed -i "s/DB_HOST/$DB_HOST/g" /etc/bareos/dir.conf.d/Catalogs.conf
     sed -i "s/DB_PORT/$DB_PORT/g" /etc/bareos/dir.conf.d/Catalogs.conf
     sed -i "s/DB_NAME/$DB_NAME/g" /etc/bareos/dir.conf.d/Catalogs.conf
