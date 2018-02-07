@@ -1,6 +1,6 @@
 FROM motius/nginx-php:7.1
 
-ARG NEXTCLOUD_VERSION=12.0.5
+ARG NEXTCLOUD_VERSION=13.0.0
 ARG GPG_nextcloud="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
 
 ENV UID=991 GID=991 \
@@ -67,6 +67,6 @@ EXPOSE 8888
 
 LABEL description="A server software for creating file hosting services" \
       nextcloud="Nextcloud v${NEXTCLOUD_VERSION}" \
-      maintainer="Motius <info@motius.de>"
+      maintainer="Schley <info@it-schley.eu>"
 
 CMD ["run.sh"]
