@@ -80,7 +80,7 @@ ARG PHP_EXT_LIST=" \
     fileinfo \
     bz2 \
     intl \
-    mcrypt \
+#    mcrypt \
     openssl \
     ldap \
     simplexml \
@@ -186,6 +186,9 @@ RUN NB_CORES=${BUILD_CORES-$(getconf _NPROCESSORS_CONF)} \
  && { find /usr/local/bin /usr/local/sbin -type f -perm +0111 -exec strip --strip-all '{}' + || true; } \
  && make clean \
  && chmod u+x /usr/local/bin/* /etc/s6.d/*/* \
+### test build problem
+# && docker-php-ext-configure ${PHP_EXT_LIST} \
+###
  && docker-php-ext-install ${PHP_EXT_LIST} \
  && apk del ${BUILD_DEPS} \
  && rm -rf /tmp/* /var/cache/apk/* /usr/src/* \
