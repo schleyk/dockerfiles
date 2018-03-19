@@ -1,6 +1,7 @@
-FROM schleyk/nginx-php:7.1
+FROM schleyk/nginx-php:7.2
+#FROM  motius/nginx-php:7.1
 
-ARG NEXTCLOUD_VERSION=13.0.0
+ARG NEXTCLOUD_VERSION=13.0.1
 ARG GPG_nextcloud="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
 
 ENV UID=991 GID=991 \
@@ -55,7 +56,7 @@ RUN apk -U upgrade \
  && tar xjf ${NEXTCLOUD_TARBALL} --strip 1 -C /nextcloud \
  && update-ca-certificates \
  && apk del build-dependencies \
- && rm -rf /var/cache/apk/* /tmp/* /root/.gnupg
+ && rm -rf /var/cache/apk/* /tmp/*
 
 COPY rootfs /
 

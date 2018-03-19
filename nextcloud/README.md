@@ -1,8 +1,9 @@
-## nextcloud
+## motius/nextcloud
 ![](https://s32.postimg.org/69nev7aol/Nextcloud_logo.png)
 
-**This image was made and maintained for me and we have no intention to make this official. Support won't be regular so if there's an update, or a fix, you can open a pull request. Any contribution is welcome, but please be aware I'm very busy currently. Before opening an issue, please check if there's already one related. Also please use Github instead of Docker Hub, otherwise I won't see your comments. Thanks.**
+**This image was made and maintained for Motius and we have no intention to make this official. Support won't be regular so if there's an update, or a fix, you can open a pull request. Any contribution is welcome, but please be aware I'm very busy currently. Before opening an issue, please check if there's already one related. Also please use Github instead of Docker Hub, otherwise I won't see your comments. Thanks.**
 
+![](https://img.shields.io/docker/pulls/motius/nextcloud.svg) ![](https://img.shields.io/github/commit-activity/y/motius/dockerfiles.svg) ![](https://img.shields.io/docker/automated/motius/nextcloud.svg) ![](https://img.shields.io/docker/build/motius/nextcloud.svg) ![](https://circleci.com/gh/motius/dockerfiles/tree/master.svg?style=shield)
 ### Features
 - Build every night to keep the container up to date
 - Based on Alpine Linux 3.7.
@@ -19,8 +20,9 @@
 - Environment variables provided (see below).
 
 ### Tags
-- **latest** : latest stable version. (13.0)
-
+- **latest** : latest stable version. (12.0)
+- **12.0** : latest 12.0.x version (stable)
+- **11.0** : latest 11.0.x version (old stable)
 
 For security reasons, you should occasionally update the container, even if you have the latest version of Nextcloud.
 
@@ -84,11 +86,16 @@ Don't copy/paste without thinking! It is a model so you can see how to do it cor
 ```
 version: '3'
 
+networks:
+  default:
+    driver: bridge
+
 services:
   nextcloud:
-    image: schleyk/nextcloud:latest
+    image: motius/nextcloud:12
     depends_on:
-      - db                     # If using MySQL
+      - nextcloud-db           # If using MySQL
+      - solr                   # If using Nextant
       - redis                  # If using Redis
     environment:
       - "UID=1000"
@@ -107,27 +114,50 @@ services:
       - "DB_PASSWORD=supersecretpassword"
       - "DB_HOST=nextcloud-db"
     volumes:
-      - /srv/nextcloud/data:/data
-      - /srv/nextcloud/config:/config
-      - /srv/nextcloud/apps:/apps2
-      - /srv/nextcloud/themes:/nextcloud/themes
+      - /docker/nextcloud/data:/data
+      - /docker/nextcloud/config:/config
+      - /docker/nextcloud/apps:/apps2
+      - /docker/nextcloud/themes:/nextcloud/themes
+    networks:
+      - nextcloud
+
   # If using MySQL
-  db:
+  nextcloud-db:
     image: mariadb:10
     volumes:
-      - /srv/nextcloud/db:/var/lib/mysql
+      - /docker/nextcloud/db:/var/lib/mysql
     environment:
       - "MYSQL_ROOT_PASSWORD=supersecretpassword"
       - "MYSQL_DATABASE=nextcloud"
       - "MYSQL_USER=nextcloud"
       - "MYSQL_PASSWORD=supersecretpassword"
+    networks:
+      - nextcloud
+
+  # If using Nextant
+  solr:
+    image: solr:6-alpine
+    container_name: solr
+    volumes:
+      - /docker/nextcloud/solr:/opt/solr/server/solr/mycores
+    entrypoint:
+      - docker-entrypoint.sh
+      - solr-precreate
+      - nextant
+    networks:
+      - nextcloud
+
   # If using Redis
   redis:
     image: redis:alpine
     container_name: redis
     volumes:
-      - /srv/nextcloud/redis:/data
+      - /docker/nextcloud/redis:/data
+    networks:
+      - nextcloud
 
+networks:
+  - nextcloud
 ```
 
 You can update everything with `docker-compose pull` followed by `docker-compose up -d`.
@@ -144,6 +174,9 @@ Redis can be used for distributed and file locking cache, alongside with APCu (l
    'port' => 6379,
    ),
 ```
+
+### How to configure Nextant
+You will have to deploy a Solr server, I've shown an example above with docker-compose. Once Nextant app is installed, go to "additional settings" in your admin pannel and use http://solr:8983/solr as "Adress of your Solr Servlet". There you go!
 
 ### Tip : how to use occ command
 There is a script for that, so you shouldn't bother to log into the container, set the right permissions, and so on. Just use `docker-compose exec nextcloud occ command`.
