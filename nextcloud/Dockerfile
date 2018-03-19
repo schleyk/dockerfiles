@@ -1,5 +1,4 @@
 FROM schleyk/nginx-php:7.2
-#FROM  motius/nginx-php:7.1
 
 ARG NEXTCLOUD_VERSION=13.0.1
 ARG GPG_nextcloud="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
