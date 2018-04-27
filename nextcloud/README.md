@@ -1,9 +1,8 @@
-## motius/nextcloud
+## schleyk/nextcloud
 ![](https://s32.postimg.org/69nev7aol/Nextcloud_logo.png)
 
 **This image was made and maintained for Motius and we have no intention to make this official. Support won't be regular so if there's an update, or a fix, you can open a pull request. Any contribution is welcome, but please be aware I'm very busy currently. Before opening an issue, please check if there's already one related. Also please use Github instead of Docker Hub, otherwise I won't see your comments. Thanks.**
 
-![](https://img.shields.io/docker/pulls/motius/nextcloud.svg) ![](https://img.shields.io/github/commit-activity/y/motius/dockerfiles.svg) ![](https://img.shields.io/docker/automated/motius/nextcloud.svg) ![](https://img.shields.io/docker/build/motius/nextcloud.svg) ![](https://circleci.com/gh/motius/dockerfiles/tree/master.svg?style=shield)
 ### Features
 - Build every night to keep the container up to date
 - Based on Alpine Linux 3.7.
@@ -19,10 +18,6 @@
 - No root processes. Never.
 - Environment variables provided (see below).
 
-### Tags
-- **latest** : latest stable version. (12.0)
-- **12.0** : latest 12.0.x version (stable)
-- **11.0** : latest 11.0.x version (old stable)
 
 For security reasons, you should occasionally update the container, even if you have the latest version of Nextcloud.
 
@@ -77,90 +72,6 @@ In the admin panel, you should switch from `AJAX cron` to `cron` (system cron).
 ### Update
 Pull a newer image, then recreate the container as you did before (*Setup* step). None of your data will be lost since you're using external volumes. If Nextcloud performed a full upgrade, your apps could be disabled, enable them again **(starting with 12.0.x, your apps are automatically enabled after an upgrade)**.
 
-### Docker-compose
-I advise you to use [docker-compose](https://docs.docker.com/compose/), which is a great tool for managing containers. You can create a `docker-compose.yml` with the following content (which must be adapted to your needs) and then run `docker-compose up -d nextcloud-db`, wait some 15 seconds for the database to come up, then run everything with `docker-compose up -d`, that's it! On subsequent runs,  a single `docker-compose up -d` is sufficient!
-
-#### Docker-compose file
-Don't copy/paste without thinking! It is a model so you can see how to do it correctly.
-
-```
-version: '3'
-
-networks:
-  default:
-    driver: bridge
-
-services:
-  nextcloud:
-    image: motius/nextcloud:12
-    depends_on:
-      - nextcloud-db           # If using MySQL
-      - solr                   # If using Nextant
-      - redis                  # If using Redis
-    environment:
-      - "UID=1000"
-      - "GID=1000"
-      - "UPLOAD_MAX_SIZE=10G"
-      - "APC_SHM_SIZE=128M"
-      - "OPCACHE_MEM_SIZE=128"
-      - "CRON_PERIOD=15m"
-      - "TZ=Europe/Berlin"
-      - "ADMIN_USER=admin"            # Don't set to configure through browser
-      - "ADMIN_PASSWORD=admin"        # Don't set to configure through browser
-      - "DOMAIN=localhost"
-      - "DB_TYPE=mysql"
-      - "DB_NAME=nextcloud"
-      - "DB_USER=nextcloud"
-      - "DB_PASSWORD=supersecretpassword"
-      - "DB_HOST=nextcloud-db"
-    volumes:
-      - /docker/nextcloud/data:/data
-      - /docker/nextcloud/config:/config
-      - /docker/nextcloud/apps:/apps2
-      - /docker/nextcloud/themes:/nextcloud/themes
-    networks:
-      - nextcloud
-
-  # If using MySQL
-  nextcloud-db:
-    image: mariadb:10
-    volumes:
-      - /docker/nextcloud/db:/var/lib/mysql
-    environment:
-      - "MYSQL_ROOT_PASSWORD=supersecretpassword"
-      - "MYSQL_DATABASE=nextcloud"
-      - "MYSQL_USER=nextcloud"
-      - "MYSQL_PASSWORD=supersecretpassword"
-    networks:
-      - nextcloud
-
-  # If using Nextant
-  solr:
-    image: solr:6-alpine
-    container_name: solr
-    volumes:
-      - /docker/nextcloud/solr:/opt/solr/server/solr/mycores
-    entrypoint:
-      - docker-entrypoint.sh
-      - solr-precreate
-      - nextant
-    networks:
-      - nextcloud
-
-  # If using Redis
-  redis:
-    image: redis:alpine
-    container_name: redis
-    volumes:
-      - /docker/nextcloud/redis:/data
-    networks:
-      - nextcloud
-
-networks:
-  - nextcloud
-```
-
-You can update everything with `docker-compose pull` followed by `docker-compose up -d`.
 
 ### How to configure Redis
 Redis can be used for distributed and file locking cache, alongside with APCu (local cache), thus making Nextcloud even more faster. As PHP redis extension is already included, all you have to is to deploy a redis server (you can do as above with docker-compose) and bind it to nextcloud in your config.php file :
@@ -181,9 +92,4 @@ You will have to deploy a Solr server, I've shown an example above with docker-c
 ### Tip : how to use occ command
 There is a script for that, so you shouldn't bother to log into the container, set the right permissions, and so on. Just use `docker-compose exec nextcloud occ command`.
 
-### Reverse proxy
-Of course you can use your own solution! nginx, Haproxy, Caddy, h2o, Traefik...
 
-Whatever your choice is, you have to know that headers are already sent by the container, including HSTS, so there's no need to add them again. **It is strongly recommended (I'd like to say : MANDATORY) to use Nextcloud through an encrypted connection (HTTPS).** [Let's Encrypt](https://letsencrypt.org/) provides free SSL/TLS certificates, so you have no excuses.
-
-That's it! Did I lie to you?
