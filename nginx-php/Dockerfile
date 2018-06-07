@@ -81,6 +81,7 @@ ARG PHP_EXT_LIST=" \
     bz2 \
     intl \
 #    mcrypt \
+    imagemagick\
     openssl \
     ldap \
     simplexml \
