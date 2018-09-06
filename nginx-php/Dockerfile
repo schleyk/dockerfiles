@@ -1,9 +1,9 @@
-FROM alpine:3.7
+FROM alpine:3.8
 
 ARG BUILD_CORES
 
 ARG NGINX_VER=1.14.0
-ARG PHP_VER=7.2.6
+ARG PHP_VER=7.2.9
 ARG LIBICONV_VERSION=1.15
 
 LABEL description="nginx + php image based on Alpine" \
@@ -81,7 +81,7 @@ ARG PHP_EXT_LIST=" \
     bz2 \
     intl \
 #    mcrypt \
-    imagemagick\
+#    imagemagick\
     openssl \
     ldap \
     simplexml \
