@@ -5,6 +5,7 @@ ARG BUILD_CORES
 ARG NGINX_VER=1.14.2
 ARG PHP_VER=7.2.13
 ARG LIBICONV_VERSION=1.15
+ARG IMAGICK_VERSION=3.4.3	#https://pecl.php.net/package/imagick
 
 LABEL description="nginx + php image based on Alpine" \
       maintainer="Schley <info@it-schley.eu>" \
@@ -80,8 +81,6 @@ ARG PHP_EXT_LIST=" \
     fileinfo \
     bz2 \
     intl \
-#    mcrypt \
-#    imagemagick\
     openssl \
     ldap \
     simplexml \
@@ -93,6 +92,7 @@ ARG PHP_EXT_LIST=" \
 
 ARG CUSTOM_BUILD_PKGS=" \
     freetype-dev \
+	imagemagick-dev \
     openldap-dev \
     gmp-dev \
     libmcrypt-dev \
@@ -144,6 +144,7 @@ RUN NB_CORES=${BUILD_CORES-$(getconf _NPROCESSORS_CONF)} \
     curl-dev \
     ca-certificates \
     ${CUSTOM_BUILD_PKGS}" \
+	
  && apk -U add \
     ${BUILD_DEPS} \
     s6 \
@@ -157,6 +158,7 @@ RUN NB_CORES=${BUILD_CORES-$(getconf _NPROCESSORS_CONF)} \
     pcre \
     zlib \
     ${CUSTOM_PKGS} \
+	
 ### Source downloading
  && wget http://nginx.org/download/nginx-${NGINX_VER}.tar.gz -O /tmp/nginx-${NGINX_VER}.tar.gz \
  && wget http://nginx.org/download/nginx-${NGINX_VER}.tar.gz.asc -O /tmp/nginx-${NGINX_VER}.tar.gz.asc \
@@ -168,37 +170,40 @@ RUN NB_CORES=${BUILD_CORES-$(getconf _NPROCESSORS_CONF)} \
  && tar xzf /tmp/nginx-${NGINX_VER}.tar.gz -C /usr/src \
  && tar xzvf /tmp/php-${PHP_VER}.tar.gz -C /usr/src \
  && tar xzf /tmp/libiconv-${LIBICONV_VERSION}.tar.gz -C /usr/src \
+ 
 ### nginx installation
  && cd /usr/src/nginx-${NGINX_VER} \
  && ./configure --with-cc-opt="-O3 -fPIE -fstack-protector-strong" ${NGINX_CONF} \
  && make -j ${NB_CORES} \
  && make install \
+ 
 ### GNU Libiconv installation
  && cd /usr/src/libiconv-${LIBICONV_VERSION} \
  && ./configure --prefix=/usr/local \
  && make && make install && libtool --finish /usr/local/lib \
+ 
 ### PHP installation
  && mv /usr/src/php-${PHP_VER} /usr/src/php \
  && cd /usr/src/php \
  && ./configure CFLAGS="-O3 -fstack-protector-strong" ${PHP_CONF} \
  && make -j ${NB_CORES} \
  && make install \
-### Strip, clean, install modules
+ 
+### Strip, clean, install
  && { find /usr/local/bin /usr/local/sbin -type f -perm +0111 -exec strip --strip-all '{}' + || true; } \
  && make clean \
  && chmod u+x /usr/local/bin/* /etc/s6.d/*/* \
-### test build problem
-# && docker-php-ext-configure ${PHP_EXT_LIST} \
-###
+# && docker-php-ext-configure ${PHP_EXT_LIST} \ 
  && docker-php-ext-install ${PHP_EXT_LIST} \
-## Dev Testing
- && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS imagemagick-dev libtool \
+  
+### Install Imagick
+ && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
  && export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS" \
- && pecl install imagick-3.4.3 \
+ && pecl install imagick-${IMAGICK_VERSION} \
  && docker-php-ext-enable imagick \
  && apk add --no-cache --virtual .imagick-runtime-deps imagemagick \
- && apk del .phpize-deps
  
- && apk del ${BUILD_DEPS} \
+ ### Remove 
+ && apk del .phpize-deps ${BUILD_DEPS} \
  && rm -rf /tmp/* /var/cache/apk/* /usr/src/* \
-&& mkdir -p /nginx/logs /nginx/run /php/php-fpm.d /php/logs /php/run /php/session
+ && mkdir -p /nginx/logs /nginx/run /php/php-fpm.d /php/logs /php/run /php/session
