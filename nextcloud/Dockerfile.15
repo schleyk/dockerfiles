@@ -30,7 +30,7 @@ RUN apk -U upgrade \
     ca-certificates \
     libsmbclient \
     tzdata \
- && pecl update-channel \
+ && pecl update-channels \
  && pecl install \
     smbclient \
     apcu \
