@@ -5,7 +5,8 @@ ARG BUILD_CORES
 ARG NGINX_VER=1.14.2
 ARG PHP_VER=7.2.13
 ARG LIBICONV_VERSION=1.15
-ARG IMAGICK_VERSION=3.4.3	#https://pecl.php.net/package/imagick
+ARG IMAGICK_VERSION=3.4.3
+#https://pecl.php.net/package/imagick
 
 LABEL description="nginx + php image based on Alpine" \
       maintainer="Schley <info@it-schley.eu>" \
