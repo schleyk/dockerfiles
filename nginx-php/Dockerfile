@@ -191,6 +191,14 @@ RUN NB_CORES=${BUILD_CORES-$(getconf _NPROCESSORS_CONF)} \
 # && docker-php-ext-configure ${PHP_EXT_LIST} \
 ###
  && docker-php-ext-install ${PHP_EXT_LIST} \
+## Dev Testing
+ && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS imagemagick-dev libtool \
+ && export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS" \
+ && pecl install imagick-3.4.3 \
+ && docker-php-ext-enable imagick \
+ && apk add --no-cache --virtual .imagick-runtime-deps imagemagick \
+ && apk del .phpize-deps
+ 
  && apk del ${BUILD_DEPS} \
  && rm -rf /tmp/* /var/cache/apk/* /usr/src/* \
 && mkdir -p /nginx/logs /nginx/run /php/php-fpm.d /php/logs /php/run /php/session
