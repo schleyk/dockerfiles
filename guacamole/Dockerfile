@@ -65,9 +65,7 @@ COPY --from=builder /opt/guacamole/ .
 
 # Hide Tomcat version
 RUN mkdir -p /usr/local/tomcat/lib/org/apache/catalina/util \
-&& echo "server.info=Apache Tomcat Version X" > /usr/local/tomcat/lib/org/apache/catalina/util/ServerInfo.properties
-
-
+&& echo "server.info=xxx" > /usr/local/tomcat/lib/org/apache/catalina/util/ServerInfo.properties
 
 # Start Guacamole under Tomcat, listening on 0.0.0.0:8080
 EXPOSE 8080
