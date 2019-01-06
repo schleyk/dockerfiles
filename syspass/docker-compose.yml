@@ -1,0 +1,28 @@
+version: '2'
+
+services:
+  app:
+    build: .
+    restart: always
+    ports:
+      - 443:443
+    links:
+      - db
+    volumes:
+      - ./syspass-apache:/etc/apache2/sites-enabled
+      - ./syspass-ssl:/etc/apache2/ssl
+      - ./syspass-config:/var/www/html/sysPass/app/config
+      - ./syspass-backup:/var/www/html/sysPass/app/backup
+    environment:
+      - COMPOSER_EXTENSIONS=syspass/plugin-authenticator
+
+  db:
+    image: mariadb:10
+    restart: always
+    volumes:
+      - ./syspass-db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=syspass
+      - MYSQL_DATABASE=syspass
+      - MYSQL_USER=syspass
+      - MYSQL_PASSWORD=syspass
