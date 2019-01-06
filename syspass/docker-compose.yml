@@ -9,7 +9,7 @@ services:
     links:
       - db
     volumes:
-      - ./syspass-apache:/etc/apache2/sites-enabled
+#      - ./syspass-apache:/etc/apache2/mods-available
       - ./syspass-ssl:/etc/apache2/ssl
       - ./syspass-config:/var/www/html/sysPass/app/config
       - ./syspass-backup:/var/www/html/sysPass/app/backup

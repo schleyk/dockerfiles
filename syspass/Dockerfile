@@ -43,7 +43,7 @@ WORKDIR /var/www/html
 LABEL build=18122601
 
 # Mininal HTTP-only Apache config
-COPY ["rootfs/syspass.conf", "/etc/apache2/sites-enabled/"]
+COPY ["rootfs/000-default.conf", "rootfs/default-ssl.conf", "/etc/apache2/sites-available/"]
 
 # Xdebug module config
 COPY rootfs/xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
