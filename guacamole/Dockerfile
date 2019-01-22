@@ -30,6 +30,10 @@ ARG TOMCAT_JRE=jre8
 # Use official maven image for the build
 FROM maven:3-jdk-8 AS builder
 
+# Use args to build radius auth extension such as
+# `--build-arg BUILD_PROFILE=lgpl-extensions`
+ARG BUILD_PROFILE=lgpl-extensions
+
 # Build environment variables
 ENV \
     BUILD_DIR=/tmp/guacamole-docker-BUILD
@@ -41,7 +45,7 @@ COPY guacamole-client/guacamole-docker/bin/ /opt/guacamole/bin/
 COPY guacamole-client/. "$BUILD_DIR"
 
 # Run the build itself
-RUN /opt/guacamole/bin/build-guacamole.sh "$BUILD_DIR" /opt/guacamole
+RUN /opt/guacamole/bin/build-guacamole.sh "$BUILD_DIR" /opt/guacamole "$BUILD_PROFILE"
 
 # Move extensions builds to image copy location, disable for prod!
 RUN cp "$BUILD_DIR"/extensions/guacamole-auth-cas/target/*.jar /opt/guacamole \
@@ -50,8 +54,8 @@ RUN cp "$BUILD_DIR"/extensions/guacamole-auth-cas/target/*.jar /opt/guacamole \
 && cp "$BUILD_DIR"/extensions/guacamole-auth-ldap/target/*.jar /opt/guacamole \
 && cp "$BUILD_DIR"/extensions/guacamole-auth-openid/target/*.jar /opt/guacamole \
 && cp "$BUILD_DIR"/extensions/guacamole-auth-quickconnect/target/*.jar /opt/guacamole \
-&& cp "$BUILD_DIR"/extensions/guacamole-auth-totp/target/*.jar /opt/guacamole
-#&& cp "$BUILD_DIR"/extensions/guacamole-auth-radius/target/*.jar /opt/guacamole \
+&& cp "$BUILD_DIR"/extensions/guacamole-auth-totp/target/*.jar /opt/guacamole \
+&& cp "$BUILD_DIR"/extensions/guacamole-auth-radius/target/*.jar /opt/guacamole
 #&& cp "$BUILD_DIR"/extensions/guacamole-auth-jdbc/target/*.jar /opt/guacamole \
 
 # For the runtime image, we start with the official Tomcat distribution
