@@ -26,7 +26,7 @@ RUN apk -U upgrade \
     libtool \
     samba-dev \
  && apk add \
-    libressl \
+    openssl \
     ca-certificates \
     libsmbclient \
     tzdata \
