@@ -1,5 +1,5 @@
 ## schleyk/nextcloud
-![](https://s32.postimg.org/69nev7aol/Nextcloud_logo.png)
+![](https://upload.wikimedia.org/wikipedia/commons/6/60/Nextcloud_Logo.svg)
 
 
 ### Features
