@@ -1,0 +1,14 @@
+version: '3.5'
+
+services:
+    nginx-full:
+      restart: always
+      build: .
+#      network_mode: "host"  
+      ports:
+      - 1080:80
+      - 1443:443
+      volumes:
+      - "/etc/letsencrypt:/etc/letsencrypt"
+      - "/etc/nginx:/etc/nginx"
+      - "/var/log/nginx:/var/log/nginx"
