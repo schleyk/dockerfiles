@@ -37,6 +37,8 @@ For security reasons, you should occasionally update the container, even if you 
 - **ADMIN_USER** : username of the admin account *(default : none, web configuration)*
 - **ADMIN_PASSWORD** : password of the admin account *(default : none, web configuration)*
 - **DOMAIN** : domain to use during the setup *(default : localhost)*
+- **TRUSTED_PROXIES** set reverse proxy like 10.0.0.0/8 127.0.0.0/8 192.168.0.0/16
+
 - **DB_TYPE** : database type (sqlite3, mysql or pgsql) *(default : sqlite3)*
 - **DB_NAME** : name of database *(default : none)*
 - **DB_USER** : username for database *(default : none)*

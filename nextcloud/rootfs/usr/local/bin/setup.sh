@@ -81,7 +81,9 @@ echo "Automatic configuration finished."
 # Use PHP to read the settings file, modify it, and write out the new settings array.
 
 CONFIG_TEMP=$(/bin/mktemp)
-php <<EOF > $CONFIG_TEMP && mv $CONFIG_TEMP $CONFIGFILE
+CONFIG_TEMP_SCRIPT=$(/bin/mktemp)
+
+cat <<EOF > $CONFIG_TEMP_SCRIPT;
 <?php
 include("/config/config.php");
 
@@ -90,12 +92,35 @@ include("/config/config.php");
 
 \$CONFIG['logtimezone'] = '$TZ';
 \$CONFIG['logdateformat'] = 'Y-m-d H:i:s';
+EOF
 
+# TRUSTED_PROXIES="192.168.0.0/24 172.16.0.0/12 127.0.0.1"
+if [[ ! -z "$TRUSTED_PROXIES"  ]]; then
+  cat <<EOF >> $CONFIG_TEMP_SCRIPT;
+  # Add Reverse Proxy
+  \$CONFIG['trusted_proxies'] = array(
+EOF
+  proxy_index=0
+  for proxy in $TRUSTED_PROXIES; do
+	cat <<EOF >> $CONFIG_TEMP_SCRIPT;
+	$proxy_index => '$proxy',
+EOF
+    proxy_index=$(( proxy_index + 1 ))
+  done
+  cat <<EOF >> $CONFIG_TEMP_SCRIPT;
+  );
+EOF
+fi
+
+cat <<EOF >> $CONFIG_TEMP_SCRIPT;
 echo "<?php\n\\\$CONFIG = ";
 var_export(\$CONFIG);
 echo ";";
 ?>
 EOF
+
+php $CONFIG_TEMP_SCRIPT > $CONFIG_TEMP && mv $CONFIG_TEMP $CONFIGFILE
+rm $CONFIG_TEMP_SCRIPT
 
 sed -i "s/localhost/$DOMAIN/g" /config/config.php
 
