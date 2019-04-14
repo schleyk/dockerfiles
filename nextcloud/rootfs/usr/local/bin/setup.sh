@@ -99,7 +99,7 @@ EOF
 
 sed -i "s/localhost/$DOMAIN/g" /config/config.php
 
-chown -R $UID:$GID /config /data
+chown -R $UID:$GID /config /data /apps2
 # Enable/disable apps. Note that this must be done after the ownCloud setup.
 # The firstrunwizard gave Josh all sorts of problems, so disabling that.
 # user_external is what allows ownCloud to use IMAP for login. The contacts
