@@ -1,7 +1,7 @@
 
 | Docker Image        |      Tag                           |
 |---------------------|:----------------------------------:|
-| schleyk/nextcloud   | 13, 14, 15                         |
-| schleyk/nginx-php   | 1.14.2-7.2.17, 1.14.2-7.3.4        |
+| schleyk/nextcloud   | 14, 15, 16                         |
+| schleyk/nginx-php   | 1.16.0-7.2.17, 1.16.0-7.3.4        |
 | schleyk/guacamole   | 1.0.0-tomcat.9.0.16-jre8-hide      |
 | schleyk/syspass     | 3.0.5                                  |
