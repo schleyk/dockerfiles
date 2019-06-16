@@ -1,5 +1,5 @@
 ## schleyk/guacamole
-
+Use tomcat:9.0.21-jdk8-openjdk
 
 ### Upgrade SQL Schema
 

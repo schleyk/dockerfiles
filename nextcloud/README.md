@@ -3,7 +3,6 @@
 
 
 ### Features
-- Build every night to keep the container up to date
 - Based on Alpine Linux 3.9.
 - Bundled with nginx and PHP 7.2 / 7.3 (schleyk/nginx-php image).
 - Automatic installation using environment variables.

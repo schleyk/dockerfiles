@@ -24,8 +24,9 @@
 # Use args for Tomcat image label to allow image builder to choose alternatives
 # such as `--build-arg TOMCAT_JRE=jre8-alpine`
 #
-ARG TOMCAT_VERSION=9.0
-ARG TOMCAT_JRE=jre8
+#https://hub.docker.com/_/tomcat
+ARG TOMCAT_VERSION=9.0.21
+ARG TOMCAT_JRE=jdk8
 
 # Use official maven image for the build
 FROM maven:3-jdk-8 AS builder
@@ -47,15 +48,15 @@ COPY guacamole-client/. "$BUILD_DIR"
 # Run the build itself
 RUN /opt/guacamole/bin/build-guacamole.sh "$BUILD_DIR" /opt/guacamole "$BUILD_PROFILE"
 
-# Move extensions builds to image copy location, disable for prod!
+# Move extensions builds to image copy location, disable for prod! (Radius only 1.1.0 or later)
 RUN cp "$BUILD_DIR"/extensions/guacamole-auth-cas/target/*.jar /opt/guacamole \
 && cp "$BUILD_DIR"/extensions/guacamole-auth-duo/target/*.jar /opt/guacamole \
 && cp "$BUILD_DIR"/extensions/guacamole-auth-header/target/*.jar /opt/guacamole \
 && cp "$BUILD_DIR"/extensions/guacamole-auth-ldap/target/*.jar /opt/guacamole \
 && cp "$BUILD_DIR"/extensions/guacamole-auth-openid/target/*.jar /opt/guacamole \
 && cp "$BUILD_DIR"/extensions/guacamole-auth-quickconnect/target/*.jar /opt/guacamole \
-&& cp "$BUILD_DIR"/extensions/guacamole-auth-totp/target/*.jar /opt/guacamole \
-&& cp "$BUILD_DIR"/extensions/guacamole-auth-radius/target/*.jar /opt/guacamole
+&& cp "$BUILD_DIR"/extensions/guacamole-auth-totp/target/*.jar /opt/guacamole
+#&& cp "$BUILD_DIR"/extensions/guacamole-auth-radius/target/*.jar /opt/guacamole
 #&& cp "$BUILD_DIR"/extensions/guacamole-auth-jdbc/target/*.jar /opt/guacamole \
 
 # For the runtime image, we start with the official Tomcat distribution
