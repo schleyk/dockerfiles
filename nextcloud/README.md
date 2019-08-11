@@ -2,6 +2,11 @@
 ![](https://upload.wikimedia.org/wikipedia/commons/6/60/Nextcloud_Logo.svg)
 
 
+### Links
+https://docs.nextcloud.com/server/stable/admin_manual/release_schedule.html
+https://github.com/nextcloud/server/wiki/Maintenance-and-Release-Schedule
+https://github.com/nextcloud/server/milestones
+
 ### Features
 - Based on Alpine Linux 3.10.
 - Bundled with nginx and PHP 7.2 / 7.3 (schleyk/nginx-php image).
