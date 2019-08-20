@@ -2,7 +2,7 @@ FROM composer:1.7 as bootstrap
 
 ENV SYSPASS_BRANCH="master"
 
-RUN git clone --branch "3.0.5.19020701" https://github.com/nuxsmin/sysPass \
+RUN git clone --branch "3.1.0.19081801" https://github.com/nuxsmin/sysPass \
   && composer install \
     --ignore-platform-reqs \
     --no-interaction \
@@ -40,7 +40,7 @@ ENV SYSPASS_DIR "/var/www/html/sysPass"
 
 WORKDIR /var/www/html
 
-LABEL build=18122601
+LABEL build=19081801
 
 # Mininal HTTP-only Apache config
 COPY ["rootfs/000-default.conf", "rootfs/default-ssl.conf", "/etc/apache2/sites-available/"]

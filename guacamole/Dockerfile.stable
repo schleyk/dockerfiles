@@ -40,10 +40,10 @@ ENV \
     BUILD_DIR=/tmp/guacamole-docker-BUILD
 
 # Add configuration scripts
-COPY guacamole-client/guacamole-docker/bin/ /opt/guacamole/bin/
+COPY guacamole-client-stable/guacamole-docker/bin/ /opt/guacamole/bin/
 
 # Copy source to container for sake of build
-COPY guacamole-client/. "$BUILD_DIR"
+COPY guacamole-client-stable/. "$BUILD_DIR"
 
 # Run the build itself
 RUN /opt/guacamole/bin/build-guacamole.sh "$BUILD_DIR" /opt/guacamole "$BUILD_PROFILE"
