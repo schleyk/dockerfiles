@@ -25,7 +25,7 @@
 # such as `--build-arg TOMCAT_JRE=jre8-alpine`
 #
 #https://hub.docker.com/_/tomcat
-ARG TOMCAT_VERSION=9.0.22
+ARG TOMCAT_VERSION=9.0.24
 ARG TOMCAT_JRE=jdk8
 
 # Use official maven image for the build
