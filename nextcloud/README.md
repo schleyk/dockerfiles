@@ -3,9 +3,9 @@
 
 
 ### Links
-https://docs.nextcloud.com/server/stable/admin_manual/release_schedule.html
-https://github.com/nextcloud/server/wiki/Maintenance-and-Release-Schedule
-https://github.com/nextcloud/server/milestones
+- https://docs.nextcloud.com/server/stable/admin_manual/release_schedule.html
+- https://github.com/nextcloud/server/wiki/Maintenance-and-Release-Schedule
+- https://github.com/nextcloud/server/milestones
 
 ### Features
 - Based on Alpine Linux 3.10.
