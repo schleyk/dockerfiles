@@ -45,4 +45,8 @@ else
     occ upgrade
 fi
 
+echo "Installing custom certificates for LDAPS"
+   cp /etc/ssl/private/* /etc/ssl/certs/
+   update-ca-certificates
+
 exec su-exec $UID:$GID /bin/s6-svscan /etc/s6.d
