@@ -9,14 +9,14 @@
 
 ### Features
 - Based on Alpine Linux 3.10.
-- Bundled with nginx and PHP 7.2 / 7.3 (schleyk/nginx-php image).
+- Bundled with nginx and PHP 7.3 (schleyk/nginx-php image).
 - Automatic installation using environment variables.
 - Package integrity (SHA512) and authenticity (PGP) checked during building process.
 - Data and apps persistence.
 - OPCache (opcocde), APCu (local) installed and configured.
 - system cron task running.
 - MySQL, PostgreSQL (server not built-in) and sqlite3 support.
-- Redis, FTP, SMB, LDAP, IMAP support.
+- Redis, FTP, SMB, LDAP(s), IMAP support.
 - GNU Libiconv for php iconv extension (avoiding errors with some apps).
 - No root processes. Never.
 - Environment variables provided (see below).
@@ -60,6 +60,7 @@ Don't forget to use a **strong password** for the admin account!
 - **/apps2** : Nextcloud downloaded apps.
 - **/nextcloud/themes** : Nextcloud themes location.
 - **/php/session** : php session files.
+-**/etc/ssl/private**  : Internal Root-CA store for LDAPs.
 
 ### Database
 Basically, you can use a database instance running on the host or any other machine. An easier solution is to use an external database container. I suggest you to use MariaDB, which is a reliable database server. You can use the official `mariadb` image available on Docker Hub to create a database container, which must be linked to the Nextcloud container. PostgreSQL can also be used.
@@ -88,7 +89,7 @@ Redis can be used for distributed and file locking cache, alongside with APCu (l
 'redis' => array(
    'host' => 'redis',
    'port' => 6379,
-   ),
+   ),
 ```
 
 ### How to configure Nextant

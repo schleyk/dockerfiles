@@ -45,7 +45,7 @@ else
     occ upgrade
 fi
 
-echo "Installing custom certificates for LDAPS"
+echo "Installing custom ROOT-CA for LDAPS..."
    cp /etc/ssl/private/* /etc/ssl/certs/
    update-ca-certificates
 
