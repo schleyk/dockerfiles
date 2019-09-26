@@ -44,6 +44,7 @@ services:
         - ./nextcloud/config:/config
         - ./nextcloud/apps:/apps2
         - ./nextcloud/themes:/nextcloud/themes
+        - ./nextcloud/certs:/etc/ssl/private
       depends_on:
         - db
       ports:
