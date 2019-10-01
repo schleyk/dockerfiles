@@ -60,7 +60,7 @@ Don't forget to use a **strong password** for the admin account!
 - **/apps2** : Nextcloud downloaded apps.
 - **/nextcloud/themes** : Nextcloud themes location.
 - **/php/session** : php session files.
--**/etc/ssl/private**  : Internal Root-CA store for LDAPs.
+- **/etc/ssl/private**  : Internal Root-CA store for LDAPs.
 
 ### Database
 Basically, you can use a database instance running on the host or any other machine. An easier solution is to use an external database container. I suggest you to use MariaDB, which is a reliable database server. You can use the official `mariadb` image available on Docker Hub to create a database container, which must be linked to the Nextcloud container. PostgreSQL can also be used.
