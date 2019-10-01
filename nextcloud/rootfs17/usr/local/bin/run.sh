@@ -45,8 +45,11 @@ else
     occ upgrade
 fi
 
-echo "Installing custom ROOT-CA for LDAPS..."
-   cp /etc/ssl/private/* /etc/ssl/certs/
-   update-ca-certificates
+if [ -d /etc/ssl/private ]
+then
+  echo "Installing custom CA certificates for LDAPS..."
+  find /etc/ssl/private/ -type f -exec cp {} /etc/ssl/certs/
+  update-ca-certificates
+fi
 
 exec su-exec $UID:$GID /bin/s6-svscan /etc/s6.d
