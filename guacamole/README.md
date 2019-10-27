@@ -73,9 +73,37 @@ https://www.cvedetails.com/vulnerability-list/vendor_id-45/product_id-887/versio
 - Create initdb.sql: 
 ```docker run --rm schleyk/guacamole:1.1.0-ff8fb55-tc9.0.27-jdk8-adoptopenjdk-openj9-hide /opt/guacamole/bin/initdb.sh --mysql > initdb.sql```
 
+- Guacamole SSO for VNC, RDP, and SSH: https://guacamole.apache.org/releases/0.9.4/
+Username/password parameter tokens
+If you or your users use the same username/password for Guacamole as in their remote desktop accounts, you can now specify the 
+“${GUAC_USERNAME}” or “${GUAC_PASSWORD}” tokens in any connection parameter. 
+
+- All .jar  plugins are stored in the folder "/home" inside the Docker Image!
+
+- Custom the login page https://github.com/Zer0CoolX/guacamole-customize-loginscreen-extension
+
+- Add Proxy IP at line "trustedProxies" inside "server.xml" file!
+
 - Upgrade SQL-Schema:
 https://github.com/apache/guacamole-client/tree/master/extensions/guacamole-auth-jdbc/modules/guacamole-auth-jdbc-mysql/schema/upgrade
 
+- NGINX reverse Proxy:
+``````
+location / {
+        proxy_pass http://guacamole:8080/guacamole/;
+        proxy_buffering off;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_redirect off;
+        proxy_read_timeout 120;
+        proxy_connect_timeout 10;
+}
+``````
 - guacamole.properties for LDAP
 LDAPS - settings:
 ``````
