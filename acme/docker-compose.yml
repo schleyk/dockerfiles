@@ -1,0 +1,10 @@
+version: "3.5"
+services:
+  acmesh:
+    image: neilpang/acme.sh:latest
+    volumes:
+      - './data:/acme.sh' # internal data
+      - './certs:/certs'  # installed cert and key files
+      - '/var/www/letsencrypt:/var/www/letsencrypt'   # webroot for LE
+    restart: always
+    command: daemon
