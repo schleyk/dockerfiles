@@ -7,7 +7,7 @@ services:
       restart: always
       volumes:
         - "./nextcloud/nginx/nextcloud.conf:/etc/nginx/conf.d/default.conf"
-#        - "./nextcloud/nginx/demo:/demo/    # just for Demo starting
+#        - "./nextcloud/nginx/demo:/demo/"    # just for Demo starting
         - "/var/www/:/var/www"
 #        - "../acme/certs:/certs"   # just for acme.sh
 #        - "/etc/letsencrypt/:/etc/letsencrypt/" # just for Certbot Certs
