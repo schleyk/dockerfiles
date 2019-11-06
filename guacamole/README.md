@@ -78,7 +78,10 @@ Username/password parameter tokens
 If you or your users use the same username/password for Guacamole as in their remote desktop accounts, you can now specify the 
 “${GUAC_USERNAME}” or “${GUAC_PASSWORD}” tokens in any connection parameter. 
 
-- All .jar  plugins are stored in the folder "/home" inside the Docker Image!
+- All .jar  plugins are stored in the folder "/opt/guacamole" inside the Docker Image,
+to activate plugins put the .jar into the "/home/extension" folder.
+
+- Write your settings to "/home/guacamole.properties".
 
 - Custom the login page https://github.com/Zer0CoolX/guacamole-customize-loginscreen-extension
 
