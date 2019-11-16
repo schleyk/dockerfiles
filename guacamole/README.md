@@ -26,9 +26,9 @@ services:
     - guacd
     - db
     volumes:
-    - /srv/guacamole-dev/home:/home
-    - /srv/guacamole-dev/custom-start.sh:/opt/guacamole/bin/custom-start.sh #do not forget to make executable at Host System!!!
-    - /srv/guacamole-dev/server.xml:/usr/local/tomcat/conf/server.xml #for ProxyPass 
+    - /srv/guacamole/home:/home
+    - /srv/guacamole/custom-start.sh:/opt/guacamole/bin/custom-start.sh #do not forget to make executable at Host System!!!
+    - /srv/guacamole/server.xml:/usr/local/tomcat/conf/server.xml #for ProxyPass 
     environment:
     - MYSQL_HOSTNAME=db
     - MYSQL_DATABASE=guacamole
@@ -36,6 +36,7 @@ services:
     - MYSQL_PASSWORD=changeme!
     - GUACD_HOSTNAME=guacd
     - GUACAMOLE_HOME=/home
+	entrypoint: /opt/guacamole/bin/custom-start.sh
 	extra_hosts:
     - "srv-dc01.contoso.local:10.0.0.1" #for LDAPs and correct FQDN over WAN
     ports:
@@ -134,4 +135,3 @@ Configure LDAP group membership match:
 ``````
 ldap-user-search-filter: (&(|(objectclass=person))(|(|(memberof=CN=GRP-Guacamole,OU=example,DC=contoso,DC=local)(primaryGroupID=10282))))
 ``````
-
