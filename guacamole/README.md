@@ -1,5 +1,5 @@
 ## Features
-- Based on tomcat:9.0.27-jdk8-adoptopenjdk-openj9 image.
+- Based on tomcat:9.0.29-jdk8-adoptopenjdk-openj9 image.
 - hide Tomcat version string.
 - Used https://github.com/apache/guacamole-client GitHub source.
 - Build Guacamole version 1.0.0-stable / 1.1.0-staging 
@@ -21,7 +21,7 @@ services:
     - db
   guacamole:
     restart: always
-    image: schleyk/guacamole:1.1.0-ff8fb55-tc9.0.27-jdk8-adoptopenjdk-openj9-hide
+    image: schleyk/guacamole:1.0.0
     links:
     - guacd
     - db
@@ -72,7 +72,7 @@ https://www.cvedetails.com/vulnerability-list/vendor_id-45/product_id-887/versio
 ```guacadmin:guacadmin```
 
 - Create initdb.sql: 
-```docker run --rm schleyk/guacamole:1.1.0-ff8fb55-tc9.0.27-jdk8-adoptopenjdk-openj9-hide /opt/guacamole/bin/initdb.sh --mysql > initdb.sql```
+```docker run --rm schleyk/guacamole:1.0.0 /opt/guacamole/bin/initdb.sh --mysql > initdb.sql```
 
 - Guacamole SSO for VNC, RDP, and SSH: https://guacamole.apache.org/releases/0.9.4/
 Username/password parameter tokens
