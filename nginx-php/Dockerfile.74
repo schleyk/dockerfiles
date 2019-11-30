@@ -110,6 +110,7 @@ ARG CUSTOM_BUILD_PKGS=" \
     openssl-dev \
     libbz2 \
     sqlite-dev \
+	oniguruma-dev \
     imap-dev"
 
 ARG CUSTOM_PKGS=" \
