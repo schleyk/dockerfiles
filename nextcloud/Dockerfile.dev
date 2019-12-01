@@ -1,7 +1,7 @@
-FROM schleyk/nginx-php:1.16.1-7.3.11
+FROM schleyk/nginx-php:1.16.1-7.4.0
 
-ARG NEXTCLOUD_VERSION=17.0.1RC1
-ARG NEXTCLOUD_TAG=prereleases
+ARG NEXTCLOUD_VERSION=latest
+ARG NEXTCLOUD_TAG=daily
 ARG GPG_nextcloud="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
 
 ENV UID=991 GID=991 \
@@ -39,7 +39,7 @@ RUN apk -U upgrade \
  && echo "extension=redis.so" > /php/conf.d/redis.ini \
  && mkdir /nextcloud \
  && cd /tmp \
- && NEXTCLOUD_TARBALL="nextcloud-${NEXTCLOUD_VERSION}.tar.bz2" \
+ && NEXTCLOUD_TARBALL="${NEXTCLOUD_VERSION}.tar.bz2" \
  && wget -q https://download.nextcloud.com/server/${NEXTCLOUD_TAG}/${NEXTCLOUD_TARBALL} \
  && wget -q https://download.nextcloud.com/server/${NEXTCLOUD_TAG}/${NEXTCLOUD_TARBALL}.sha512 \
  && wget -q https://download.nextcloud.com/server/${NEXTCLOUD_TAG}/${NEXTCLOUD_TARBALL}.asc \
