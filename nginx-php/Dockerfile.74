@@ -122,7 +122,6 @@ ARG CUSTOM_PKGS=" \
     libpq \
     oniguruma \
     sqlite-libs \
-    sqlite-dev \
     c-client"
 
 COPY rootfs /
