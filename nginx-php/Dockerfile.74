@@ -203,6 +203,11 @@ RUN NB_CORES=${BUILD_CORES-$(getconf _NPROCESSORS_CONF)} \
  && pecl install imagick-${IMAGICK_VERSION} \
  && docker-php-ext-enable imagick \
  && apk add --no-cache --virtual .imagick-runtime-deps imagemagick \
+ 
+ ## Install GD
+ && docker-php-ext-configure gd --with-freetype --with-jpeg \
+ && docker-php-ext-install gd \
+ && docker-php-ext-enable gd \
 
 ### Remove
  && apk del .phpize-deps ${BUILD_DEPS} \
