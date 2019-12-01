@@ -110,7 +110,7 @@ ARG CUSTOM_BUILD_PKGS=" \
     openssl-dev \
     libbz2 \
     sqlite-dev \
-	oniguruma-dev \
+    oniguruma-dev \
     imap-dev"
 
 ARG CUSTOM_PKGS=" \
@@ -120,6 +120,7 @@ ARG CUSTOM_PKGS=" \
     bzip2-dev \
     icu \
     libpq \
+    oniguruma \
     c-client"
 
 COPY rootfs /
