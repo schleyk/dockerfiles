@@ -1,4 +1,4 @@
-FROM schleyk/nginx-php:1.16.1-7.4.1
+FROM schleyk/nginx-php:1.16.1-7.3.13
 
 ARG NEXTCLOUD_VERSION=18.0.0
 ARG NEXTCLOUD_TAG=releases
