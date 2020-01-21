@@ -83,6 +83,10 @@ services:
       stdin_open: true
       tty: true
       restart: always
+      environment:
+       - JWT_ENABLED=true
+       - JWT_SECRET=2r3!5At3?gu8
+
       volumes:
         - ./onlyoffice/data:/var/www/onlyoffice/Data
         - ./onlyoffice/log:/var/log/onlyoffice
