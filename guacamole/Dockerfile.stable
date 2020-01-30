@@ -56,8 +56,8 @@ RUN cp "$BUILD_DIR"/extensions/guacamole-auth-cas/target/*.jar /opt/guacamole \
 && cp "$BUILD_DIR"/extensions/guacamole-auth-ldap/target/*.jar /opt/guacamole \
 && cp "$BUILD_DIR"/extensions/guacamole-auth-openid/target/*.jar /opt/guacamole \
 && cp "$BUILD_DIR"/extensions/guacamole-auth-quickconnect/target/*.jar /opt/guacamole \
-&& cp "$BUILD_DIR"/extensions/guacamole-auth-totp/target/*.jar /opt/guacamole
-#&& cp "$BUILD_DIR"/extensions/guacamole-auth-radius/target/*.jar /opt/guacamole
+&& cp "$BUILD_DIR"/extensions/guacamole-auth-totp/target/*.jar /opt/guacamole \
+&& cp "$BUILD_DIR"/extensions/guacamole-auth-radius/target/*.jar /opt/guacamole
 #&& cp "$BUILD_DIR"/extensions/guacamole-auth-jdbc/target/*.jar /opt/guacamole \
 
 # For the runtime image, we start with the official Tomcat distribution
