@@ -137,5 +137,5 @@ ldap-user-search-filter: (&(objectClass=*)(memberof=CN=GRP-Guacamole,OU=example,
 ``````
 Configure guacamole group ldap match. You need to create the group inside of guacamole!:
 ``````
-ldap-group-base-dn: OU=Gruppen,OU=example,DC=contoso,DC=local
+ldap-group-base-dn: OU=guacgroups,OU=example,DC=contoso,DC=local
 ``````
