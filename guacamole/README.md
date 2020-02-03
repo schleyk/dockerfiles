@@ -133,5 +133,9 @@ ldap-username-attribute: sAMAccountName
 ``````
 Configure LDAP group membership match:
 ``````
-ldap-user-search-filter: (&(|(objectclass=person))(|(|(memberof=CN=GRP-Guacamole,OU=example,DC=contoso,DC=local)(primaryGroupID=10282))))
+ldap-user-search-filter: (&(objectClass=*)(memberof=CN=GRP-Guacamole,OU=example,DC=contoso,DC=local))
+``````
+Configure guacamole group ldap match. You need to create the group inside of guacamole!:
+``````
+ldap-group-base-dn: OU=Gruppen,OU=example,DC=contoso,DC=local
 ``````
