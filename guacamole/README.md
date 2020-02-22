@@ -72,7 +72,7 @@ https://www.cvedetails.com/vulnerability-list/vendor_id-45/product_id-887/versio
 ```guacadmin:guacadmin```
 
 - Create initdb.sql: 
-```docker run --rm schleyk/guacamole:1.0.0 /opt/guacamole/bin/initdb.sh --mysql > initdb.sql```
+```docker run --rm schleyk/guacamole:1.1.0 /opt/guacamole/bin/initdb.sh --mysql > initdb.sql```
 
 - Guacamole SSO for VNC, RDP, and SSH: https://guacamole.apache.org/releases/0.9.4/
 Username/password parameter tokens
@@ -80,7 +80,7 @@ If you or your users use the same username/password for Guacamole as in their re
 “${GUAC_USERNAME}” or “${GUAC_PASSWORD}” tokens in any connection parameter. 
 
 - All .jar  plugins are stored in the folder "/opt/guacamole" inside the Docker Image,
-to activate plugins put the .jar into the "/home/extension" folder.
+to activate plugins put the .jar into the "/home/extensions" folder.
 
 - Write your settings to "/home/guacamole.properties".
 
