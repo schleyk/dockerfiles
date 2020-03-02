@@ -1,4 +1,4 @@
-FROM schleyk/nginx-php:1.16.1-7.4.0
+FROM schleyk/nginx-php:1.16.1-7.4.3
 
 ARG NEXTCLOUD_VERSION=latest
 ARG NEXTCLOUD_TAG=daily
