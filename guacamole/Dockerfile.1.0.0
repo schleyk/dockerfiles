@@ -25,7 +25,7 @@
 # such as `--build-arg TOMCAT_JRE=jre8-alpine`
 #
 #https://hub.docker.com/_/tomcat
-ARG TOMCAT_VERSION=9.0.31
+ARG TOMCAT_VERSION=9.0.33
 ARG TOMCAT_JRE=jdk8-adoptopenjdk-openj9
 #Disable "TOMCAT_JRE=jdk8" for license reasons!
 
@@ -41,10 +41,10 @@ ENV \
     BUILD_DIR=/tmp/guacamole-docker-BUILD
 
 # Add configuration scripts
-COPY guacamole-client-dev/guacamole-docker/bin/ /opt/guacamole/bin/
+COPY guacamole-client-oldstable/guacamole-docker/bin/ /opt/guacamole/bin/
 
 # Copy source to container for sake of build
-COPY guacamole-client-dev/. "$BUILD_DIR"
+COPY guacamole-client-oldstable/. "$BUILD_DIR"
 
 # Run the build itself
 RUN /opt/guacamole/bin/build-guacamole.sh "$BUILD_DIR" /opt/guacamole "$BUILD_PROFILE"
