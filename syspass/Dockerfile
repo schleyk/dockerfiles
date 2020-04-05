@@ -7,7 +7,7 @@ FROM composer:1.7 as bootstrap
 
 ENV SYSPASS_BRANCH="master"
 
-RUN git clone --branch "3.1.1.19121601" https://github.com/nuxsmin/sysPass.git \
+RUN git clone --branch "3.1.2.20030701" https://github.com/nuxsmin/sysPass.git \
   && composer install \
     --ignore-platform-reqs \
     --no-interaction \
@@ -19,7 +19,7 @@ RUN git clone --branch "3.1.1.19121601" https://github.com/nuxsmin/sysPass.git \
 
 FROM php:7.3-apache-stretch as app
 
-LABEL maintainer=nuxsmin@syspass.org version=3.1.1 php=7.3
+LABEL maintainer=nuxsmin@syspass.org version=3.1.2 php=7.3
 
 RUN apt-get update \
 	&& apt-get install -y \
