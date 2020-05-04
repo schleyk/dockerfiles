@@ -91,7 +91,8 @@ ARG PHP_EXT_LIST=" \
     ftp \
     exif \
     gmp \
-    imap"
+    imap \
+	bcmath"
 
 ARG CUSTOM_BUILD_PKGS=" \
     freetype-dev \
