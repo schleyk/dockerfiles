@@ -1,5 +1,5 @@
 ## Features
-- Based on tomcat:9.0.33-jdk8-adoptopenjdk-openj9 image.
+- Based on tomcat:9.0.35-jdk8-adoptopenjdk-openj9 image.
 - hide Tomcat version string.
 - Used https://github.com/apache/guacamole-client GitHub source.
 - Build Guacamole version 1.0.0(oldstable) / 1.1.0(stable) 
