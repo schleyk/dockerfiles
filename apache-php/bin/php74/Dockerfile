@@ -57,7 +57,6 @@ RUN docker-php-ext-install pdo_mysql && \
     docker-php-ext-install -j$(nproc) intl && \
     docker-php-ext-install mbstring && \
     docker-php-ext-install gettext
-#    docker-php-ext-install imagick 
 
 # Install Freetype 
 RUN apt-get -y update && \

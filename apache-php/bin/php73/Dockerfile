@@ -17,13 +17,13 @@ RUN apt-get -y update && \
     apt-get -y --no-install-recommends install nano wget dialog libsqlite3-dev libsqlite3-0 && \
     apt-get -y --no-install-recommends install mysql-client zlib1g-dev libzip-dev libicu-dev && \
     apt-get -y --no-install-recommends install --fix-missing apt-utils build-essential git curl && \ 
-    apt-get -y --no-install-recommends install --fix-missing libcurl3 libcurl3-dev zip openssl && \
+    apt-get -y --no-install-recommends install --fix-missing libcurl3 libcurl3-dev zip openssl imagemagick libmagickwand-dev && \
     rm -rf /var/lib/apt/lists/* && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Install xdebug
-RUN pecl install xdebug-2.7.2 && \
-    docker-php-ext-enable xdebug
+#RUN pecl install xdebug-2.7.2 && \
+#    docker-php-ext-enable xdebug
 
 # Install redis
 RUN pecl install redis-5.0.2 && \
@@ -48,6 +48,11 @@ RUN apt-get -y update && \
     rm -rf /var/lib/apt/lists/* && \
     docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ && \
     docker-php-ext-install -j$(nproc) gd
+
+# ImageMagick
+ARG IMAGICK_VERSION=stable
+RUN pecl install imagick-${IMAGICK_VERSION} \
+	&& docker-php-ext-enable imagick
 
 # Enable apache modules
 RUN a2enmod rewrite headers
