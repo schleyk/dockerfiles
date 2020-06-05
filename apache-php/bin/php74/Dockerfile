@@ -1,4 +1,4 @@
-FROM php:7.4.6-apache-buster
+FROM php:7.4-apache-buster
 
 # Surpresses debconf complaints of trying to install apt packages interactively
 # https://github.com/moby/moby/issues/4032#issuecomment-192327844
@@ -14,26 +14,10 @@ RUN apt-get -y update --fix-missing && \
 
 # Install useful tools and install important libaries
 RUN apt-get -y update && \
-    apt-get -y --no-install-recommends install nano wget \
-    dialog \
-    libsqlite3-dev \
-    libsqlite3-0 && \
-    apt-get -y --no-install-recommends install default-mysql-client \
-    zlib1g-dev \
-    libzip-dev \
-    libicu-dev && \
-    apt-get -y --no-install-recommends install --fix-missing apt-utils \
-    build-essential \
-    git \
-    curl \
-    libonig-dev && \ 
-    apt-get -y --no-install-recommends install --fix-missing libcurl4 \
-    libcurl4-openssl-dev \
-    zip \
-    openssl \
-    imagemagick \
-    libmagickwand-dev \
-    && \
+    apt-get -y --no-install-recommends install nano wget dialog libsqlite3-dev libsqlite3-0 && \ 
+    apt-get -y --no-install-recommends install default-mysql-client zlib1g-dev libzip-dev libicu-dev && \
+    apt-get -y --no-install-recommends install --fix-missing apt-utils build-essential git curl libonig-dev && \
+    apt-get -y --no-install-recommends install --fix-missing libcurl4 libcurl4-openssl-dev zip openssl imagemagick libmagickwand-dev && \
     rm -rf /var/lib/apt/lists/* && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
@@ -57,6 +41,7 @@ RUN docker-php-ext-install pdo_mysql && \
     docker-php-ext-install -j$(nproc) intl && \
     docker-php-ext-install mbstring && \
     docker-php-ext-install gettext
+#    docker-php-ext-install imagick 
 
 # Install Freetype 
 RUN apt-get -y update && \
