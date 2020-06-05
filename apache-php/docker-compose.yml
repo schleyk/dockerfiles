@@ -10,7 +10,7 @@ version: "3"
 services:
 
   web:
-    image: schleyk/apache-php:7.3.18
+    image: schleyk/apache-php:7.3
     restart: 'always'
     ports:
       - "80:80"
@@ -34,6 +34,8 @@ services:
       MYSQL_DATABASE: webapp
       MYSQL_USER: webapp
       MYSQL_PASSWORD: changeme!
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
+
 
 #  redis:
 #    image: redis:latest
