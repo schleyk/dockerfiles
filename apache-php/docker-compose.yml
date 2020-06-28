@@ -19,7 +19,8 @@ services:
 #      - redis
     volumes:
       - ./www:/var/www/html
-      - ./config/php/php.ini:/usr/local/etc/php/php.ini
+      - ./config/cron:/etc/cron.d:ro
+      - ./config/php/php.ini:/usr/local/etc/php/conf.d/custom-php.ini
       - ./config/vhosts:/etc/apache2/sites-enabled
       - ./logs/apache2:/var/log/apache2
 
