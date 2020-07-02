@@ -8,7 +8,7 @@ services:
     - db
   guacamole:
     restart: always
-    image: schleyk/guacamole:1.1.0
+    image: schleyk/guacamole:1.2.0
     links:
     - guacd
     - db

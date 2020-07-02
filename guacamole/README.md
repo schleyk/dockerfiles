@@ -1,8 +1,8 @@
 ## Features
-- Based on tomcat:9.0.35-jdk8-adoptopenjdk-openj9 image.
+- Based on tomcat:9.0.x-jdk8-adoptopenjdk-openj9 image.
 - hide Tomcat version string.
 - Used https://github.com/apache/guacamole-client GitHub source.
-- Build Guacamole version 1.0.0(oldstable) / 1.1.0(stable) 
+- Build Guacamole version 1.1.0(oldstable) / 1.2.0(stable) 
 - Support LDAP(s)
 - Support custom Root-CAs for LDAP(s) with custom endrepoint (Source https://github.com/schleyk/dockerfiles/tree/master/guacamole)
 - Include plugins:
@@ -21,7 +21,7 @@ services:
     - db
   guacamole:
     restart: always
-    image: schleyk/guacamole:1.1.0
+    image: schleyk/guacamole:1.2.0
     links:
     - guacd
     - db
