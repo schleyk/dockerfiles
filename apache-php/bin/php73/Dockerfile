@@ -14,7 +14,7 @@ RUN apt-get -y update --fix-missing && \
 
 # Install useful tools and install important libaries
 RUN apt-get -y update && \
-    apt-get -y --no-install-recommends install nano wget cron dialog libsqlite3-dev libsqlite3-0 && \
+    apt-get -y --no-install-recommends install nano wget msmtp cron dialog libsqlite3-dev libsqlite3-0 && \
     apt-get -y --no-install-recommends install default-mysql-client zlib1g-dev libzip-dev libicu-dev && \
     apt-get -y --no-install-recommends install --fix-missing apt-utils build-essential git curl libonig-dev && \
     apt-get -y --no-install-recommends install --fix-missing libcurl4 libcurl4-openssl-dev zip openssl imagemagick libmagickwand-dev && \
@@ -23,7 +23,7 @@ RUN apt-get -y update && \
 
 # Install S6-overlay
 ADD https://github.com/just-containers/s6-overlay/releases/download/v2.0.0.1/s6-overlay-amd64.tar.gz /tmp/
-RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C /
+RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C / && rm /tmp/s6-overlay-amd64.tar.gz
 
 # Install xdebug
 #RUN pecl install xdebug-stable && \
@@ -58,6 +58,9 @@ RUN docker-php-ext-install pdo_mysql && \
 
 # Enable opcache (path is dynamic depending on PHP API version)
 RUN printf "zend_extension=%s\n" /usr/local/lib/php/extensions/no-debug-non-zts-*/opcache.so > "$PHP_INI_DIR/conf.d/docker-php-ext-opcache.ini"
+
+# Enable PHP Sendmmail with mSMTP
+RUN echo "sendmail_path = "/usr/bin/msmtp -t"" > "$PHP_INI_DIR/conf.d/docker-php-ext-sendmail.ini"
 
 # Use the default production configuration
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
