@@ -2,11 +2,14 @@ FROM php:7.3.20-apache-buster
 
 # Surpresses debconf complaints of trying to install apt packages interactively
 # https://github.com/moby/moby/issues/4032#issuecomment-192327844
- 
+
+ENV TIME_ZONE "Europe/Berlin"
 ARG DEBIAN_FRONTEND=noninteractive
 
-# Update
-RUN apt-get -y update --fix-missing && \
+# Update timezone
+RUN echo $TIME_ZONE > /etc/timezone &&\
+	dpkg-reconfigure -f noninteractive tzdata &&\
+	apt-get -y update --fix-missing && \
     apt-get upgrade -y && \
     apt-get --no-install-recommends install -y apt-utils && \
     rm -rf /var/lib/apt/lists/*
