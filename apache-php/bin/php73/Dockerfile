@@ -3,7 +3,7 @@ FROM php:7.3.20-apache-buster
 # Surpresses debconf complaints of trying to install apt packages interactively
 # https://github.com/moby/moby/issues/4032#issuecomment-192327844
 
-ENV TIME_ZONE "Europe/Berlin"
+ENV TZ "Europe/Berlin"
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Update timezone
@@ -17,12 +17,16 @@ RUN echo $TIME_ZONE > /etc/timezone &&\
 
 # Install useful tools and install important libaries
 RUN apt-get -y update && \
-    apt-get -y --no-install-recommends install nano wget msmtp cron dialog libsqlite3-dev libsqlite3-0 && \
+    apt-get -y --no-install-recommends install nano wget tzdata msmtp cron dialog libsqlite3-dev libsqlite3-0 && \
     apt-get -y --no-install-recommends install default-mysql-client zlib1g-dev libzip-dev libicu-dev && \
     apt-get -y --no-install-recommends install --fix-missing apt-utils build-essential git curl libonig-dev && \
     apt-get -y --no-install-recommends install --fix-missing libcurl4 libcurl4-openssl-dev zip openssl imagemagick libmagickwand-dev && \
     rm -rf /var/lib/apt/lists/* && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Update timezone
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 
 # Install S6-overlay
 ADD https://github.com/just-containers/s6-overlay/releases/download/v2.0.0.1/s6-overlay-amd64.tar.gz /tmp/
@@ -69,7 +73,7 @@ RUN echo "sendmail_path = "/usr/bin/msmtp -t"" > "$PHP_INI_DIR/conf.d/docker-php
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
 # Enable apache modules
-RUN a2enmod rewrite headers
+RUN a2enmod rewrite headers expires
 
 # Cleanup
 RUN rm -rf /usr/src/*
