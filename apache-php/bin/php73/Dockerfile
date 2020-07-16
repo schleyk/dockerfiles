@@ -64,8 +64,9 @@ RUN docker-php-ext-install pdo_mysql && \
 # Enable opcache (path is dynamic depending on PHP API version)
 RUN printf "zend_extension=%s\n" /usr/local/lib/php/extensions/no-debug-non-zts-*/opcache.so > "$PHP_INI_DIR/conf.d/docker-php-ext-opcache.ini"
 
-# Enable PHP Sendmmail with mSMTP
-RUN echo "sendmail_path = "/usr/bin/msmtp -t"" > "$PHP_INI_DIR/conf.d/docker-php-ext-sendmail.ini"
+# Enable PHP Sendmmail with mSMTP and add timezone
+RUN echo "sendmail_path = "/usr/bin/msmtp -t"" > "$PHP_INI_DIR/conf.d/docker-php-ext-sendmail.ini" && \
+    echo date.timezone = "$TZ" > "$PHP_INI_DIR/conf.d/docker-php-ext-timezone.ini"
 
 # Use the default production configuration
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
