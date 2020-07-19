@@ -1,8 +1,5 @@
 FROM php:7.3.20-apache-buster
 
-# Surpresses debconf complaints of trying to install apt packages interactively
-# https://github.com/moby/moby/issues/4032#issuecomment-192327844
-
 ENV TZ "Europe/Berlin"
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -11,7 +8,6 @@ RUN apt-get -y update --fix-missing && \
     apt-get upgrade -y && \
     apt-get --no-install-recommends install -y apt-utils && \
     rm -rf /var/lib/apt/lists/*
-
 
 # Install useful tools and install important libaries
 RUN apt-get -y update && \
@@ -24,7 +20,6 @@ RUN apt-get -y update && \
 
 # Update timezone
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-
 
 # Install S6-overlay
 ADD https://github.com/just-containers/s6-overlay/releases/download/v2.0.0.1/s6-overlay-amd64.tar.gz /tmp/
