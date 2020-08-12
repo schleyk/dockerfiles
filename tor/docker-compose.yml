@@ -1,0 +1,10 @@
+version: '3.3'
+
+services:
+    hidden:
+        build: 
+        image: schleyk/tor:dev-ubu2
+        restart: always
+        volumes:
+            - './data:/data'
+
