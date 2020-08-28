@@ -10,7 +10,7 @@ version: "3"
 services:
 
   web:
-    image: schleyk/apache-php:7.3
+    image: schleyk/apache-php:7.4
     restart: 'always'
     ports:
       - "80:80"
