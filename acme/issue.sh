@@ -15,8 +15,19 @@ domain_args() {
 makecert() {
         d="$1"
         shift 1
-#        ./acme.sh --issue --dns dns_pdns -d "$d" "$@"
-        ./acme.sh --issue -w /var/www/letsencrypt/ -d "$d" "$@"
+		
+## Stage ACME over DNS (select DNS provider https://github.com/acmesh-official/acme.sh/wiki/dnsapi )
+#        ./acme.sh --issue --staging --dnssleep 60 --dns dns_servercow -d "$d" "$@"
+
+## Stage ACME over WebServer
+#        ./acme.sh --issue --staging -w /var/www/letsencrypt/ -d "$d" "$@"      
+
+## Prod ACME over DNS (select DNS provider https://github.com/acmesh-official/acme.sh/wiki/dnsapi )
+#        ./acme.sh --issue --dnssleep 60 --dns dns_servercow -d "$d" "$@"                        
+
+## Prod ACME over WebServer
+        ./acme.sh --issue -w /var/www/letsencrypt/ -d "$d" "$@"                                
+
 
 }
 
