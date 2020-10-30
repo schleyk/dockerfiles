@@ -1,4 +1,4 @@
-FROM php:8.0.0rc1-apache-buster
+FROM php:8.0.0rc3-apache-buster
 
 # Surpresses debconf complaints of trying to install apt packages interactively
 # https://github.com/moby/moby/issues/4032#issuecomment-192327844
