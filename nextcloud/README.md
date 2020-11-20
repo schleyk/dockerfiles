@@ -9,7 +9,7 @@
 ### Features
 - Support for Nextcloud version 17 / 18 / 19 /20.
 - Based on Alpine Linux 3.12.
-- Bundled with nginx and PHP 7.3 (schleyk/nginx-php image).
+- Bundled with nginx and PHP 7.3 and 7.4 (schleyk/nginx-php image).
 - Automatic installation using environment variables.
 - Package integrity (SHA512) and authenticity (PGP) checked during building process.
 - Data and apps persistence.
