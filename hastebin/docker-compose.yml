@@ -1,0 +1,20 @@
+version: "2.1"
+
+services:
+   hastebin:
+     restart: always
+     image: schleyk/hastebin
+     depends_on:
+       - redis
+     environment:
+       STORAGE_TYPE: "redis"
+       STORAGE_HOST: "redis"
+       MAX_LENGTH: "99999999999999"
+     ports:
+       - "7777:7777"
+   redis:
+     restart: always
+     image: redis:latest
+     volumes:
+       - "./data/:/data/"
+     entrypoint: redis-server --appendonly yes
