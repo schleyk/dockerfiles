@@ -1,9 +1,8 @@
-# Please Note:
-# - In PHP Versions <= 7.4 MySQL8 is not supported due to lacking pdo support
-# Possible values: php54, php56, php71, php72, php73, php74
+############################################
+# Possible values: php73, php74, php80
 #    build:
 #      context: ./bin/${PHPVERSION}
-
+############################################
 
 version: "3"
 
@@ -17,6 +16,7 @@ services:
     links:
       - db
 #      - redis
+#      - solr
     volumes:
       - ./www:/var/www/html
       - ./config/cron:/etc/cron.d:ro
@@ -38,6 +38,16 @@ services:
       MYSQL_PASSWORD: changeme!
     command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
 
+#  solr:
+#    restart: 'always'
+#    image: solr:8.5
+#    ports:
+#     - "8983:8983"
+#    volumes:
+#     - solr-data:/var/solr
+#    command:
+#      - solr-precreate
+#      - gettingstarted
 
 #  redis:
 #    image: redis:latest
@@ -51,6 +61,5 @@ services:
 #    ports:
 #      - '8080:80'
 
-
-
-
+#volumes:
+#  solr-data:
