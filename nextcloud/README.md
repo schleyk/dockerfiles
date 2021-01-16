@@ -1,3 +1,5 @@
+[![Docker Pulls](https://img.shields.io/docker/pulls/schleyk/nextcloud.svg)](https://hub.docker.com/r/schleyk/nextcloud)
+
 ## schleyk/nextcloud
 ![](https://upload.wikimedia.org/wikipedia/commons/6/60/Nextcloud_Logo.svg)
 

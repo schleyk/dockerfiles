@@ -1,3 +1,5 @@
+[![Docker Pulls](https://img.shields.io/docker/pulls/schleyk/guacamole.svg)](https://hub.docker.com/r/schleyk/guacamole)
+
 ## Features
 - Based on tomcat:9.0.x-jdk8-adoptopenjdk-openj9 image.
 - hide Tomcat version string.
