@@ -74,7 +74,7 @@ https://www.cvedetails.com/vulnerability-list/vendor_id-45/product_id-887/versio
 ```guacadmin:guacadmin```
 
 - Create initdb.sql: 
-```docker run --rm schleyk/guacamole:1.1.0 /opt/guacamole/bin/initdb.sh --mysql > initdb.sql```
+```docker run --rm schleyk/guacamole:1.3.0 /opt/guacamole/bin/initdb.sh --mysql > initdb.sql```
 
 - Guacamole SSO for VNC, RDP, and SSH: https://guacamole.apache.org/releases/0.9.4/
 Username/password parameter tokens

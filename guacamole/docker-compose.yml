@@ -14,8 +14,8 @@ services:
     - db
     volumes:
     - /srv/guacamole/home:/home
-    - /srv/guacamole/custom-start.sh:/opt/guacamole/bin/custom-start.sh #do not forget to make executable at Host System!!!
-    - /srv/guacamole/server.xml:/usr/local/tomcat/conf/server.xml #for ProxyPass 
+#    - /srv/guacamole/custom-start.sh:/opt/guacamole/bin/custom-start.sh #do not forget to make executable at Host System!!!
+#    - /srv/guacamole/server.xml:/usr/local/tomcat/conf/server.xml #for ProxyPass 
     environment:
     - MYSQL_HOSTNAME=db
     - MYSQL_DATABASE=guacamole
@@ -23,9 +23,9 @@ services:
     - MYSQL_PASSWORD=changeme!
     - GUACD_HOSTNAME=guacd
     - GUACAMOLE_HOME=/home
-    entrypoint: /opt/guacamole/bin/custom-start.sh
-    extra_hosts:
-    - "srv-dc01.contoso.local:10.0.0.1" #for LDAPs and correct FQDN over WAN
+#    entrypoint: /opt/guacamole/bin/custom-start.sh
+#    extra_hosts:
+#    - "srv-dc01.contoso.local:10.0.0.1" #for LDAPs and correct FQDN over WAN
     ports:
     - 8080:8080
     depends_on:
@@ -40,11 +40,12 @@ services:
     - MYSQL_DATABASE=guacamole
     - MYSQL_USER=guacamole
     - MYSQL_PASSWORD=changeme!
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    environment:
-    - PMA_HOST:db
-    ports:
-    - "8282:80"
-    depends_on:
-    - db
+    
+#  phpmyadmin:
+#    image: phpmyadmin/phpmyadmin
+#    environment:
+#    - PMA_HOST:db
+#    ports:
+#    - "8282:80"
+#    depends_on:
+#    - db
