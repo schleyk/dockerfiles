@@ -6,7 +6,7 @@ echo Custom script start.
 
 # for AdoptOpenJDK
 cd $JAVA_HOME/jre/lib/security
-keytool -importcert -noprompt -alias custom-ca -keystore cacerts -storepass changeit -file /home/custom-ca.cer -trustcacerts
+keytool -importcert -noprompt -alias custom-ca -keystore cacerts -storepass changeit -file /home/custom-ca.cer -trustcacerts || true
 keytool -keystore cacerts -storepass changeit -list | grep custom-ca
 cd /opt/guacamole
 
