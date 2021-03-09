@@ -1,0 +1,4 @@
+#!/usr/bin/with-contenv sh
+
+exec docker-php-entrypoint apache2-foreground
+

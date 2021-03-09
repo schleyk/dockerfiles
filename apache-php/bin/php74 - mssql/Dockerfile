@@ -1,20 +1,25 @@
 FROM php:7.4.16-apache-buster
 
 ENV TZ "Europe/Berlin"
+ENV ACCEPT_EULA=Y
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Update
 RUN apt-get -y update --fix-missing && \
     apt-get upgrade -y && \
-    apt-get --no-install-recommends install -y apt-utils && \
+    apt-get --no-install-recommends install -y apt-utils curl gnupg gnupg1 gnupg2 && \
     rm -rf /var/lib/apt/lists/*
+	
+# Add Custom APT Repo
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
+    curl https://packages.microsoft.com/config/debian/10/prod.list > /etc/apt/sources.list.d/mssql-release.list
 
 # Install useful tools and install important libaries
 RUN apt-get -y update && \
-    apt-get -y --no-install-recommends install nano wget tzdata msmtp cron dialog libsqlite3-dev libsqlite3-0 && \
+    apt-get -y --no-install-recommends install nano wget tzdata msmtp cron dialog libsqlite3-dev libsqlite3-0 locales apt-transport-https && \
     apt-get -y --no-install-recommends install default-mysql-client zlib1g-dev libzip-dev libicu-dev && \
     apt-get -y --no-install-recommends install --fix-missing apt-utils build-essential git curl libonig-dev && \
-    apt-get -y --no-install-recommends install --fix-missing libcurl4 libcurl4-openssl-dev zip openssl imagemagick libmagickwand-dev && \
+    apt-get -y --no-install-recommends install --fix-missing libcurl4 libcurl4-openssl-dev zip openssl imagemagick libmagickwand-dev unixodbc-dev msodbcsql17 && \
     rm -rf /var/lib/apt/lists/* && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
@@ -28,6 +33,11 @@ RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C / && rm /tmp/s6-overlay-amd64.tar.gz
 # Install xdebug
 #RUN pecl install xdebug-stable && \
 #    docker-php-ext-enable xdebug
+
+# Install MSSQL
+RUN docker-php-ext-install mbstring pdo pdo_mysql \
+    && pecl install sqlsrv pdo_sqlsrv \
+    && docker-php-ext-enable sqlsrv pdo_sqlsrv
 
 # Install redis
 RUN pecl install redis-stable && \
