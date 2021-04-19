@@ -9,10 +9,13 @@ RUN apk -U upgrade
 RUN apk add --no-cache alpine-sdk git
 
 RUN adduser -g "" -G abuild -k /var/empty -D abuild
+
+WORKDIR /usr/src/aports
+RUN chown abuild: /usr/src/aports
+
 USER abuild
 RUN abuild-keygen -a -i -n
 
-WORKDIR /usr/src/aports
 RUN git clone --recursive -b 3.13-stable https://gitlab.alpinelinux.org/alpine/aports.git .
 RUN git checkout cd3147e6c6183d7cbdaf7c7bf2b714aaa8f47af9
 
