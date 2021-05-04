@@ -1,39 +1,8 @@
-###
-
-# We are using an older samba version here since the newest one causes issues with the smbclient PHP module.
-# TODO - security patches are now missing due to this, get rid of this ASAP
-
-FROM schleyk/nginx-php:7.4
-
-RUN apk -U upgrade
-RUN apk add --no-cache alpine-sdk git
-
-RUN adduser -g "" -G abuild -k /var/empty -D abuild
-
-WORKDIR /usr/src/aports
-RUN chown abuild: /usr/src/aports
-
-USER abuild
-RUN abuild-keygen -a -i -n
-
-RUN git clone --recursive -b 3.13-stable https://gitlab.alpinelinux.org/alpine/aports.git .
-RUN git checkout cd3147e6c6183d7cbdaf7c7bf2b714aaa8f47af9
-
-RUN cd main/samba && abuild -r
-
-RUN chmod a+rX -R ~/packages
-
-###
-
 FROM schleyk/nginx-php:7.4
 
 ARG NEXTCLOUD_VERSION=21.0.1
 ARG NEXTCLOUD_TAG=releases
 ARG GPG_nextcloud="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
-
-COPY --from=0 /home/abuild/packages/ /packages/
-COPY --from=0 /home/abuild/.abuild/*.pub /etc/apk/keys/
-RUN (echo "" && echo "/packages/main/") >> /etc/apk/repositories
 
 ENV UID=991 GID=991 \
     UPLOAD_MAX_SIZE=10G \
@@ -55,11 +24,11 @@ RUN apk -U upgrade \
     automake \
     pcre-dev \
     libtool \
-    samba-dev=4.13.3-r1 \
+    samba-dev \
  && apk add \
     openssl \
     ca-certificates \
-    libsmbclient=4.13.3-r1 \
+    libsmbclient \
     tzdata \
  && pecl update-channels \
  && pecl install \

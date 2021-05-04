@@ -1,4 +1,4 @@
-FROM php:7.4.16-apache-buster
+FROM php:7.4.18-apache-buster
 
 ENV TZ "Europe/Berlin"
 ENV ACCEPT_EULA=Y
