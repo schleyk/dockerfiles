@@ -3,13 +3,11 @@ FROM alpine:3.13
 ARG BUILD_CORES
 
 ARG NGINX_VER=1.20.0
-ARG PHP_VER=7.4.19
+ARG PHP_VER=8.0.6
 ARG LIBICONV_VERSION=1.16
-ARG IMAGICK_VERSION=3.4.4
 #http://nginx.org/en/download.html
 #https://www.php.net/downloads.php
 #https://ftp.gnu.org/pub/gnu/libiconv/
-#https://pecl.php.net/package/imagick
 
 LABEL description="nginx + php image based on Alpine" \
       maintainer="Schley <info@it-schley.eu>" \
@@ -55,20 +53,20 @@ ARG PHP_CONF=" \
     --with-libedit \
     --with-openssl \
     --with-iconv=/usr/local \
-    --with-gd \
-    --with-jpeg-dir \
-    --with-png-dir \
+    --enable-gd \
+    --with-freetype \
+    --with-jpeg \
     --with-webp-dir \
     --with-xpm-dir=no \
-    --with-freetype-dir \
+    --enable-gd-native-ttf \
     --disable-gd-jis-conv \
+    --enable-bcmath \
     --with-zlib"
 
 ARG PHP_EXT_LIST=" \
     mysqli \
     ctype \
     dom \
-    json \
     xml \
     mbstring \
     posix \
@@ -91,12 +89,10 @@ ARG PHP_EXT_LIST=" \
     ftp \
     exif \
     gmp \
-    imap \
-    bcmath"
+    imap"
 
 ARG CUSTOM_BUILD_PKGS=" \
     freetype-dev \
-    imagemagick-dev \
     openldap-dev \
     gmp-dev \
     icu-dev \
@@ -111,7 +107,6 @@ ARG CUSTOM_BUILD_PKGS=" \
     openssl-dev \
     libbz2 \
     sqlite-dev \
-    oniguruma-dev \
     imap-dev"
 
 ARG CUSTOM_PKGS=" \
@@ -121,30 +116,31 @@ ARG CUSTOM_PKGS=" \
     bzip2-dev \
     icu \
     libpq \
-    oniguruma \
-    sqlite-libs \
     c-client"
 
-COPY rootfs7 /
+COPY rootfs8 /
 
 RUN NB_CORES=${BUILD_CORES-$(getconf _NPROCESSORS_CONF)} \
+
+### Packages installation
  && BUILD_DEPS=" \
     linux-headers \
     libtool \
     build-base \
     pcre-dev \
     zlib-dev \
-    libzip-dev \
     wget \
     gnupg \
     autoconf \
     gcc \
     g++ \
     libc-dev \
+    libzip-dev \
     make \
     pkgconf \
     curl-dev \
     ca-certificates \
+    oniguruma-dev \
     ${CUSTOM_BUILD_PKGS}" \
  && apk -U add \
     ${BUILD_DEPS} \
@@ -153,9 +149,11 @@ RUN NB_CORES=${BUILD_CORES-$(getconf _NPROCESSORS_CONF)} \
     curl \
     libedit \
     libxml2 \
+    oniguruma \
     openssl \
     libwebp \
     libzip \
+    sqlite-libs \
     gd \
     pcre \
     zlib \
@@ -191,26 +189,27 @@ RUN NB_CORES=${BUILD_CORES-$(getconf _NPROCESSORS_CONF)} \
  && make -j ${NB_CORES} \
  && make install \
 
-### Strip, clean, install
+### Install Pickel
+ARG PICKLE_VERSION=0.7.2
+ADD https://github.com/FriendsOfPHP/pickle/releases/download/v${PICKLE_VERSION}/pickle.phar /usr/local/bin/pickle
+RUN chmod +x /usr/local/bin/pickle
+
+# ImageMagick
+# FIXME - currently imagick does not officially support PHP 8 (https://github.com/Imagick/imagick/issues/358 and https://github.com/FriendsOfPHP/pickle/issues/193)
+ADD https://github.com/Imagick/imagick/pull/348.patch /var/tmp/imagick-patches/348.patch
+RUN apt-get install -y git \
+	&& git clone https://github.com/Imagick/imagick.git /var/tmp/imagick \
+	&& cd /var/tmp/imagick \
+	&& git checkout 448c1cd0d58ba2838b9b6dff71c9b7e70a401b90 \
+	&& pickle install /var/tmp/imagick/ --version-override "$(git describe --tags --long --always | sed -e 's,-g,+g,' -e 's,-,.,g')" \
+	&& docker-php-ext-enable imagick
+# | grep -Po '^([\d\.]+\.){0,3}\d+')" 
+
+### Strip, clean, install modules
  && { find /usr/local/bin /usr/local/sbin -type f -perm +0111 -exec strip --strip-all '{}' + || true; } \
  && make clean \
  && chmod u+x /usr/local/bin/* /etc/s6.d/*/* \
- && sleep 1 \
  && docker-php-ext-install ${PHP_EXT_LIST} \
-
-### Install Imagick
- && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
- && export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS" \
- && pecl install imagick-${IMAGICK_VERSION} \
- && docker-php-ext-enable imagick \
- && apk add --no-cache --virtual .imagick-runtime-deps imagemagick \
- 
- ## Install GD
- && docker-php-ext-configure gd --with-freetype --with-jpeg \
- && docker-php-ext-install gd \
- && docker-php-ext-enable gd \
-
-### Remove
- && apk del .phpize-deps ${BUILD_DEPS} \
+ && apk del ${BUILD_DEPS} \
  && rm -rf /tmp/* /var/cache/apk/* /usr/src/* \
  && mkdir -p /nginx/logs /nginx/run /php/php-fpm.d /php/logs /php/run /php/session

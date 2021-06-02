@@ -122,7 +122,7 @@ ARG CUSTOM_PKGS=" \
     libpq \
     c-client"
 
-COPY rootfs /
+COPY rootfs7 /
 
 RUN NB_CORES=${BUILD_CORES-$(getconf _NPROCESSORS_CONF)} \
  && BUILD_DEPS=" \
