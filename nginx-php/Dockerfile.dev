@@ -192,30 +192,29 @@ RUN NB_CORES=${BUILD_CORES-$(getconf _NPROCESSORS_CONF)} \
 # fix line endings so shebangs won't confuse the shell
 RUN sed -i 's,\r,,g' /usr/local/bin/*
 
-### Install Pickel
+### Install Pickle
 ARG PICKLE_VERSION=0.7.2
 ADD https://github.com/FriendsOfPHP/pickle/releases/download/v${PICKLE_VERSION}/pickle.phar /usr/local/bin/pickle
 RUN chmod +x /usr/local/bin/pickle
 
 # ImageMagick
 # FIXME - currently imagick does not officially support PHP 8 (https://github.com/Imagick/imagick/issues/358 and https://github.com/FriendsOfPHP/pickle/issues/193)
-ENV MAGICK_HOME=/usr
-ADD https://github.com/Imagick/imagick/pull/348.patch /var/tmp/imagick-patches/348.patch
-#RUN apk add git imagemagick-dev \
+#ENV MAGICK_HOME=/usr
+ADD https://github.com/Imagick/imagick/pull/348.patch /tmp/imagick-patches/348.patch
 RUN apk add git imagemagick6-libs imagemagick6-dev \
- && git clone https://github.com/Imagick/imagick.git /var/tmp/imagick \
- && cd /var/tmp/imagick \
+ && git clone https://github.com/Imagick/imagick.git /tmp/imagick \
+ && cd /tmp/imagick \
  && git checkout 448c1cd0d58ba2838b9b6dff71c9b7e70a401b90 \
- && pickle install /var/tmp/imagick/ --version-override "$(git describe --tags --long --always | sed -e 's,-g,+g,' -e 's,-,.,g')" \
+ && pickle install /tmp/imagick/ --version-override "$(git describe --tags --long --always | sed -e 's,-g,+g,' -e 's,-,.,g')" \
  && chmod u+x /usr/local/bin/* /etc/s6.d/*/* \
  && docker-php-ext-enable imagick
 # | grep -Po '^([\d\.]+\.){0,3}\d+')"
 
 ### Strip, clean, install modules
 # RUN { find /usr/local/bin /usr/local/sbin -type f -perm +0111 -exec strip --strip-all '{}' + || true; } \
-# && make clean \
-# && chmod u+x /usr/local/bin/* /etc/s6.d/*/* \
-RUN docker-php-ext-install ${PHP_EXT_LIST} \
+# make clean \
+RUN chmod u+x /usr/local/bin/* /etc/s6.d/*/* \
+ && docker-php-ext-install ${PHP_EXT_LIST} \
  && apk del ${BUILD_DEPS} \
  && rm -rf /tmp/* /var/cache/apk/* /usr/src/* \
  && mkdir -p /nginx/logs /nginx/run /php/php-fpm.d /php/logs /php/run /php/session
