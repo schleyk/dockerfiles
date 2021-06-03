@@ -201,7 +201,8 @@ RUN chmod +x /usr/local/bin/pickle
 # FIXME - currently imagick does not officially support PHP 8 (https://github.com/Imagick/imagick/issues/358 and https://github.com/FriendsOfPHP/pickle/issues/193)
 ENV MAGICK_HOME=/usr
 ADD https://github.com/Imagick/imagick/pull/348.patch /var/tmp/imagick-patches/348.patch
-RUN apk add git imagemagick-dev \
+#RUN apk add git imagemagick-dev \
+RUN apk add git imagemagick6-libs imagemagick6-dev \
  && git clone https://github.com/Imagick/imagick.git /var/tmp/imagick \
  && cd /var/tmp/imagick \
  && git checkout 448c1cd0d58ba2838b9b6dff71c9b7e70a401b90 \
