@@ -9,14 +9,14 @@ RUN apt-get -y update --fix-missing && \
     apt-get upgrade -y && \
     apt-get --no-install-recommends install -y apt-utils curl gnupg gnupg1 gnupg2 && \
     rm -rf /var/lib/apt/lists/*
-	
+
 # Add Custom APT Repo
 RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
     curl https://packages.microsoft.com/config/debian/10/prod.list > /etc/apt/sources.list.d/mssql-release.list
 
 # Install useful tools and install important libaries
 RUN apt-get -y update && \
-    apt-get -y --no-install-recommends install nano wget tzdata msmtp cron dialog libsqlite3-dev libsqlite3-0 locales apt-transport-https && \
+    apt-get -y --no-install-recommends install nano wget tzdata msmtp cron dialog libsqlite3-dev libsqlite3-0 locales apt-transport-https libldap2-dev && \
     apt-get -y --no-install-recommends install default-mysql-client zlib1g-dev libzip-dev libicu-dev && \
     apt-get -y --no-install-recommends install --fix-missing apt-utils build-essential git curl libonig-dev && \
     apt-get -y --no-install-recommends install --fix-missing libcurl4 libcurl4-openssl-dev zip openssl imagemagick libmagickwand-dev unixodbc-dev msodbcsql17 && \
@@ -53,6 +53,10 @@ RUN apt-get -y update && \
 # ImageMagick
 RUN pecl install imagick-stable && \
     docker-php-ext-enable imagick
+
+# LDAP
+RUN docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ \
+    && docker-php-ext-install ldap
 
 # Other PHP7 Extensions
 RUN docker-php-ext-install pdo_mysql && \
