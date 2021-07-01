@@ -25,7 +25,7 @@
 # such as `--build-arg TOMCAT_JRE=jre8-alpine`
 #
 #https://hub.docker.com/_/tomcat
-ARG TOMCAT_VERSION=9.0.46
+ARG TOMCAT_VERSION=9.0.48
 ARG TOMCAT_JRE=jdk8-adoptopenjdk-openj9
 #Disable "TOMCAT_JRE=jdk8" for license reasons!
 

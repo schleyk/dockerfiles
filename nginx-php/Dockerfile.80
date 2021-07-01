@@ -1,9 +1,9 @@
-FROM alpine:3.13
+FROM alpine:3.14
 
 ARG BUILD_CORES
 
-ARG NGINX_VER=1.20.0
-ARG PHP_VER=8.0.7
+ARG NGINX_VER=1.20.1
+ARG PHP_VER=8.0.8
 ARG LIBICONV_VERSION=1.16
 #http://nginx.org/en/download.html
 #https://www.php.net/downloads.php
