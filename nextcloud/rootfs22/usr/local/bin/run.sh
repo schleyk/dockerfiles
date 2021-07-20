@@ -38,19 +38,19 @@ for dir in /nextcloud /data /config /apps2 /var/log /php /nginx /tmp /etc/s6.d; 
 done
 echo "Done updating permissions."
 
-if [ ! -f /config/config.php ]; then
-    # New installation, run the setup
-    /usr/local/bin/setup.sh
-else
-    occ upgrade
-fi
-
 if [ "$(find "/etc/ssl/private" -mindepth 1 -print -quit 2>/dev/null)" ]; then
 	echo "Installing custom CA certificates for LDAPS..."
 	cp /etc/ssl/private/* /etc/ssl/certs/
 	update-ca-certificates
 else
     echo "no custom CA certificates found..."
+fi
+
+if [ ! -f /config/config.php ]; then
+    # New installation, run the setup
+    /usr/local/bin/setup.sh
+else
+    occ upgrade
 fi
 
 exec su-exec $UID:$GID /bin/s6-svscan /etc/s6.d
