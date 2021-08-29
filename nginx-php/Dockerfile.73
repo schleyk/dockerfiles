@@ -67,6 +67,7 @@ ARG PHP_CONF=" \
 ARG PHP_EXT_LIST=" \
     mysqli \
     ctype \
+    sodium \
     dom \
     json \
     xml \
@@ -115,6 +116,7 @@ ARG CUSTOM_BUILD_PKGS=" \
 
 ARG CUSTOM_PKGS=" \
     freetype \
+    libsodium-dev \
     openldap \
     gmp \
     bzip2-dev \
