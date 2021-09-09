@@ -1,7 +1,6 @@
 version: '3.5'
 
 services:
-
     nginx:
       image: nginx:stable-alpine
       restart: always
@@ -19,7 +18,7 @@ services:
 
     nextcloud:
       restart: always
-      image: schleyk/nextcloud:21
+      image: schleyk/nextcloud:22
       links:
         - redis:redis
         - db:mariadb
@@ -32,8 +31,8 @@ services:
         - OPCACHE_MEM_SIZE=128
         - CRON_PERIOD=15m
         - TZ=Europe/Berlin
-#        - ADMIN_USER=admin         # Don't set to configure through browser
-#        - ADMIN_PASSWORD=changeme!  # Don't set to configure through browser
+        - ADMIN_USER=admin         # Don't set to configure through browser
+        - ADMIN_PASSWORD=changeme!  # Don't set to configure through browser
         - TRUSTED_PROXIES=10.0.0.0/8 192.168.0.0/16 172.16.0.0/12
         - DOMAIN=cloud.example.org
         - DB_TYPE=mysql
@@ -49,14 +48,13 @@ services:
         - ./nextcloud/certs:/etc/ssl/private
       depends_on:
         - db
-      ports:
-      - 127.0.0.1:8888:8888
-
+        
     redis:
       image: redis:alpine
       restart: always
       volumes:
         - ./nextcloud/redis:/data
+        
     db:
       image: mariadb:10.5
       restart: always
@@ -67,15 +65,6 @@ services:
         - MYSQL_DATABASE=nextcloud
         - MYSQL_USER=nextcloud
         - MYSQL_PASSWORD=changeme!
-        
-    phpmyadmin:
-      image: phpmyadmin/phpmyadmin
-      environment:
-        PMA_HOST: db
-      ports:
-        - "8181:80"
-      depends_on:
-        - db
 
     onlyoffice:
       image: onlyoffice/documentserver:latest
@@ -88,3 +77,12 @@ services:
       volumes:
         - ./onlyoffice/data:/var/www/onlyoffice/Data
         - ./onlyoffice/log:/var/log/onlyoffice
+
+#    phpmyadmin:
+#      image: phpmyadmin/phpmyadmin
+#      environment:
+#        PMA_HOST: db
+#      ports:
+#        - "8181:80"
+#      depends_on:
+#        - db
