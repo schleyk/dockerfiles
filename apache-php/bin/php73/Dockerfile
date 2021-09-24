@@ -1,4 +1,4 @@
-FROM php:7.3.30-apache-buster
+FROM php:7.3.31-apache-buster
 
 ENV TZ "Europe/Berlin"
 ARG DEBIAN_FRONTEND=noninteractive
