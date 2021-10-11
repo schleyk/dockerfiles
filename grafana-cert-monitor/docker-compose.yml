@@ -1,0 +1,50 @@
+####
+# Configruation Grafana:
+# 1. Login to Grafana (default login: admin:admin) 
+# 2. Add new (data-source) and add "Prometheus" with URL "prometheus:9090" --> Save & test
+# 2. Import Dashboard (+) -> Crate -> Import -> Import ID: 13230 -> select "Prometheus" as data-source.
+# 3. Add / Change Monitor URLs inside prometheus.yml
+####
+
+version: '3.5'
+services:
+
+  prometheus:
+    image: prom/prometheus
+    restart: always
+    ports:
+      - "127.0.0.1:9090:9090"
+    volumes:
+      - "./config:/config"
+    command:
+      - "--config.file=/config/prometheus.yml"
+
+  blackbox_exporter:
+    image: prom/blackbox-exporter
+    ports:
+      - "9115:9115"
+    dns: 8.8.8.8
+    restart: always
+    links:
+      - prometheus
+    ports:
+      - "127.0.0.1:9115:9115"
+    volumes:
+      - "./config:/config"
+    command: 
+      - "--config.file=/config/blackbox.yml"
+
+  grafana:
+    image: grafana/grafana:latest
+    restart: always
+    links:
+      - prometheus
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-volume:/var/lib/grafana
+
+volumes:
+  grafana-volume:
+    external: true
+
