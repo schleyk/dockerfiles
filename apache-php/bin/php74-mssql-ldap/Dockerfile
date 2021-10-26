@@ -1,8 +1,9 @@
-FROM php:7.4.25-apache-bullseye
+FROM php:7.4.25-apache-buster
 
 ENV TZ "Europe/Berlin"
 ENV ACCEPT_EULA=Y
 ARG DEBIAN_FRONTEND=noninteractive
+ARG S6=2.2.0.3
 
 # Update
 RUN apt-get -y update --fix-missing && \
@@ -27,7 +28,7 @@ RUN apt-get -y update && \
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # Install S6-overlay
-ADD https://github.com/just-containers/s6-overlay/releases/download/v2.0.0.1/s6-overlay-amd64.tar.gz /tmp/
+ADD https://github.com/just-containers/s6-overlay/releases/download/v$S6/s6-overlay-amd64.tar.gz /tmp/
 RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C / && rm /tmp/s6-overlay-amd64.tar.gz
 
 # Install xdebug
