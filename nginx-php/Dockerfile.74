@@ -65,7 +65,6 @@ ARG PHP_CONF=" \
     --with-zlib"
 
 ARG PHP_EXT_LIST=" \
-    libgomp \
     mysqli \
     ctype \
     sodium \
@@ -160,6 +159,7 @@ RUN NB_CORES=${BUILD_CORES-$(getconf _NPROCESSORS_CONF)} \
     libwebp \
     libzip \
     gd \
+	libgomp \
     pcre \
     zlib \
     ${CUSTOM_PKGS} \
