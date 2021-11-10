@@ -1,10 +1,11 @@
-FROM alpine:3.14
+FROM alpine:edge
 
 ARG BUILD_CORES
 
 ARG NGINX_VER=1.20.1
 ARG PHP_VER=8.0.12
 ARG LIBICONV_VERSION=1.16
+ARG IMAGICK_VERSION=3.5.1
 #http://nginx.org/en/download.html
 #https://www.php.net/downloads.php
 #https://ftp.gnu.org/pub/gnu/libiconv/
@@ -66,6 +67,7 @@ ARG PHP_CONF=" \
 ARG PHP_EXT_LIST=" \
     mysqli \
     ctype \
+    sodium \
     dom \
     xml \
     mbstring \
@@ -111,6 +113,7 @@ ARG CUSTOM_BUILD_PKGS=" \
 
 ARG CUSTOM_PKGS=" \
     freetype \
+    libsodium-dev \
     openldap \
     gmp \
     bzip2-dev \
@@ -200,14 +203,19 @@ RUN chmod +x /usr/local/bin/pickle
 # ImageMagick
 # FIXME - currently imagick does not officially support PHP 8 (https://github.com/Imagick/imagick/issues/358 and https://github.com/FriendsOfPHP/pickle/issues/193)
 #ENV MAGICK_HOME=/usr
-ADD https://github.com/Imagick/imagick/pull/348.patch /tmp/imagick-patches/348.patch
-RUN apk add git imagemagick6-libs imagemagick6-dev \
- && git clone https://github.com/Imagick/imagick.git /tmp/imagick \
- && cd /tmp/imagick \
- && git checkout 448c1cd0d58ba2838b9b6dff71c9b7e70a401b90 \
- && pickle install /tmp/imagick/ --version-override "$(git describe --tags --long --always | sed -e 's,-g,+g,' -e 's,-,.,g')" \
- && chmod u+x /usr/local/bin/* /etc/s6.d/*/* \
- && docker-php-ext-enable imagick
+RUN chmod +x /usr/local/bin/docker-php-ext-* \
+ && apk add git imagemagick-libs imagemagick-dev imagemagick \
+ && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
+ && export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS" \
+ && pecl install imagick-${IMAGICK_VERSION} \
+ && docker-php-ext-enable imagick \
+ && apk add --no-cache --virtual .imagick-runtime-deps imagemagick
+
+# && git clone https://github.com/Imagick/imagick.git /tmp/imagick \
+# && cd /tmp/imagick \
+# && pickle install /tmp/imagick/ \
+# && chmod u+x /usr/local/bin/* /etc/s6.d/*/* \
+# && docker-php-ext-enable imagick
 # | grep -Po '^([\d\.]+\.){0,3}\d+')"
 
 ### Strip, clean, install modules
