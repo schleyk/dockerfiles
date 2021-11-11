@@ -190,38 +190,22 @@ RUN NB_CORES=${BUILD_CORES-$(getconf _NPROCESSORS_CONF)} \
  && cd /usr/src/php \
  && ./configure CFLAGS="-O3 -fstack-protector-strong" ${PHP_CONF} \
  && make -j ${NB_CORES} \
- && make install
+ && make install \
 
 # fix line endings so shebangs won't confuse the shell
-RUN sed -i 's,\r,,g' /usr/local/bin/*
-
-### Install Pickle
-ARG PICKLE_VERSION=0.7.2
-ADD https://github.com/FriendsOfPHP/pickle/releases/download/v${PICKLE_VERSION}/pickle.phar /usr/local/bin/pickle
-RUN chmod +x /usr/local/bin/pickle
+ && sed -i 's,\r,,g' /usr/local/bin/* \
 
 # ImageMagick
-# FIXME - currently imagick does not officially support PHP 8 (https://github.com/Imagick/imagick/issues/358 and https://github.com/FriendsOfPHP/pickle/issues/193)
-#ENV MAGICK_HOME=/usr
-RUN chmod +x /usr/local/bin/docker-php-ext-* \
+ && chmod +x /usr/local/bin/docker-php-ext-* \
  && apk add git imagemagick-libs imagemagick-dev imagemagick \
  && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
  && export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS" \
  && pecl install imagick-${IMAGICK_VERSION} \
  && docker-php-ext-enable imagick \
- && apk add --no-cache --virtual .imagick-runtime-deps imagemagick
-
-# && git clone https://github.com/Imagick/imagick.git /tmp/imagick \
-# && cd /tmp/imagick \
-# && pickle install /tmp/imagick/ \
-# && chmod u+x /usr/local/bin/* /etc/s6.d/*/* \
-# && docker-php-ext-enable imagick
-# | grep -Po '^([\d\.]+\.){0,3}\d+')"
+ && apk add --no-cache --virtual .imagick-runtime-deps imagemagick \
 
 ### Strip, clean, install modules
-# RUN { find /usr/local/bin /usr/local/sbin -type f -perm +0111 -exec strip --strip-all '{}' + || true; } \
-# make clean \
-RUN chmod u+x /usr/local/bin/* /etc/s6.d/*/* \
+ && chmod u+x /usr/local/bin/* /etc/s6.d/*/* \
  && docker-php-ext-install ${PHP_EXT_LIST} \
  && apk del ${BUILD_DEPS} \
  && rm -rf /tmp/* /var/cache/apk/* /usr/src/* \
