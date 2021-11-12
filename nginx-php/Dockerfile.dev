@@ -153,6 +153,8 @@ RUN NB_CORES=${BUILD_CORES-$(getconf _NPROCESSORS_CONF)} \
     libedit \
     libxml2 \
     oniguruma \
+	libgomp \
+	libsodium \
     openssl \
     libwebp \
     libzip \
