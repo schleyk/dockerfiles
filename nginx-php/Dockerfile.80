@@ -1,10 +1,11 @@
-FROM alpine:3.14
+FROM alpine:edge
 
 ARG BUILD_CORES
 
 ARG NGINX_VER=1.20.1
 ARG PHP_VER=8.0.12
 ARG LIBICONV_VERSION=1.16
+ARG IMAGICK_VERSION=3.5.1
 #http://nginx.org/en/download.html
 #https://www.php.net/downloads.php
 #https://ftp.gnu.org/pub/gnu/libiconv/
@@ -94,6 +95,7 @@ ARG PHP_EXT_LIST=" \
 
 ARG CUSTOM_BUILD_PKGS=" \
     freetype-dev \
+	libsodium-dev \
     openldap-dev \
     gmp-dev \
     icu-dev \
@@ -112,7 +114,6 @@ ARG CUSTOM_BUILD_PKGS=" \
 
 ARG CUSTOM_PKGS=" \
     freetype \
-	libsodium-dev \
     openldap \
     gmp \
     bzip2-dev \
@@ -152,6 +153,8 @@ RUN NB_CORES=${BUILD_CORES-$(getconf _NPROCESSORS_CONF)} \
     libedit \
     libxml2 \
     oniguruma \
+	libgomp \
+	libsodium \
     openssl \
     libwebp \
     libzip \
@@ -191,9 +194,19 @@ RUN NB_CORES=${BUILD_CORES-$(getconf _NPROCESSORS_CONF)} \
  && make -j ${NB_CORES} \
  && make install \
 
+# fix line endings so shebangs won't confuse the shell
+ && sed -i 's,\r,,g' /usr/local/bin/* \
+
+# ImageMagick
+ && chmod +x /usr/local/bin/docker-php-ext-* \
+ && apk add git imagemagick-libs imagemagick-dev imagemagick \
+ && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
+ && export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS" \
+ && pecl install imagick-${IMAGICK_VERSION} \
+ && docker-php-ext-enable imagick \
+ && apk add --no-cache --virtual .imagick-runtime-deps imagemagick \
+
 ### Strip, clean, install modules
- && { find /usr/local/bin /usr/local/sbin -type f -perm +0111 -exec strip --strip-all '{}' + || true; } \
- && make clean \
  && chmod u+x /usr/local/bin/* /etc/s6.d/*/* \
  && docker-php-ext-install ${PHP_EXT_LIST} \
  && apk del ${BUILD_DEPS} \
