@@ -26,7 +26,8 @@
 #
 #https://hub.docker.com/_/tomcat
 ARG TOMCAT_VERSION=9.0.55
-ARG TOMCAT_JRE=jdk8-adoptopenjdk-openj9
+ARG TOMCAT_JRE=jdk8-openjdk
+#ARG TOMCAT_JRE=jdk8-adoptopenjdk-openj9
 #Disable "TOMCAT_JRE=jdk8" for license reasons!
 
 # Use official maven image for the build
