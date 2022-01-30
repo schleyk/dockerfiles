@@ -3,12 +3,13 @@ FROM alpine:3.15
 ARG BUILD_CORES
 
 ARG NGINX_VER=1.20.2
-ARG PHP_VER=8.0.14
+ARG PHP_VER=8.0.15
 ARG LIBICONV_VERSION=1.16
-ARG IMAGICK_VERSION=3.5.1
+ARG IMAGICK_VERSION=3.7.0
 #http://nginx.org/en/download.html
 #https://www.php.net/downloads.php
 #https://ftp.gnu.org/pub/gnu/libiconv/
+#https://pecl.php.net/package/imagick
 
 LABEL description="nginx + php image based on Alpine" \
       maintainer="Schley <info@it-schley.eu>" \
