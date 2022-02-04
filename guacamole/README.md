@@ -4,7 +4,7 @@
 - Based on tomcat:9.0.x-jdk8-adoptopenjdk-openj9 image.
 - hide Tomcat version string.
 - Used https://github.com/apache/guacamole-client GitHub source.
-- Build Guacamole 1.3.0(stable) 
+- Build Guacamole 1.4.0(stable) 
 - Support LDAP(s)
 - Support custom Root-CAs for LDAP(s) with custom endrepoint (Source https://github.com/schleyk/dockerfiles/tree/master/guacamole)
 - Include plugins:
@@ -23,21 +23,21 @@ services:
     - db
   guacamole:
     restart: always
-    image: schleyk/guacamole:1.3.0
+    image: schleyk/guacamole:1.4.0
     links:
     - guacd
     - db
 #    volumes:
-#    - /srv/guacamole/home:/home
-#    - /srv/guacamole/custom-start.sh:/opt/guacamole/bin/custom-start.sh #do not forget to make executable at Host System!!!
-#    - /srv/guacamole/server.xml:/usr/local/tomcat/conf/server.xml #for ProxyPass 
+#    - ./data:/data
+#    - ./custom/custom-start.sh:/opt/guacamole/bin/custom-start.sh #do not forget to make executable at Host System!!!
+#    - ./custom/server.xml:/usr/local/tomcat/conf/server.xml #for ProxyPass 
     environment:
     - MYSQL_HOSTNAME=db
     - MYSQL_DATABASE=guacamole
     - MYSQL_USER=guacamole
     - MYSQL_PASSWORD=changeme!
     - GUACD_HOSTNAME=guacd
-    - GUACAMOLE_HOME=/home
+    - GUACAMOLE_HOME=/data
 #    entrypoint: /opt/guacamole/bin/custom-start.sh
 #    extra_hosts:
 #    - "srv-dc01.contoso.local:10.0.0.1" #for LDAPs and correct FQDN over WAN
@@ -74,7 +74,7 @@ https://www.cvedetails.com/vulnerability-list/vendor_id-45/product_id-887/versio
 ```guacadmin:guacadmin```
 
 - Create initdb.sql: 
-```docker run --rm schleyk/guacamole:1.3.0 /opt/guacamole/bin/initdb.sh --mysql > initdb.sql```
+```docker run --rm schleyk/guacamole:1.4.0 /opt/guacamole/bin/initdb.sh --mysql > initdb.sql```
 
 - Guacamole SSO for VNC, RDP, and SSH: https://guacamole.apache.org/releases/0.9.4/
 Username/password parameter tokens
@@ -82,9 +82,9 @@ If you or your users use the same username/password for Guacamole as in their re
 “${GUAC_USERNAME}” or “${GUAC_PASSWORD}” tokens in any connection parameter. 
 
 - All .jar  plugins are stored in the folder "/opt/guacamole" inside the Docker Image,
-to activate plugins put the .jar into the "/home/extensions" folder.
+to activate plugins put the .jar into the "/data/extensions" folder.
 
-- Write your settings to "/home/guacamole.properties".
+- Write your settings to "/data/guacamole.properties".
 
 - Custom the login page https://github.com/Zer0CoolX/guacamole-customize-loginscreen-extension
 
