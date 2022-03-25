@@ -1,7 +1,7 @@
-FROM schleyk/nginx-php:dev
+FROM schleyk/nginx-php:8.0
 
-ARG NEXTCLOUD_VERSION=23.0.3
-ARG NEXTCLOUD_TAG=releases
+ARG NEXTCLOUD_VERSION=24.0.0beta1
+ARG NEXTCLOUD_TAG=prereleases
 ARG GPG_nextcloud="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
 
 ENV UID=991 GID=991 \
@@ -58,7 +58,7 @@ RUN apk -U upgrade \
  && apk del build-dependencies \
  && rm -rf /var/cache/apk/* /tmp/*
 
-COPY rootfs21 /
+COPY rootfs23 /
 
 RUN chmod +x /usr/local/bin/* /etc/s6.d/*/* /etc/s6.d/.s6-svscan/*
 
