@@ -1,4 +1,4 @@
-FROM schleyk/nginx-php:8.1
+FROM schleyk/nginx-php:7.4
 
 ARG NEXTCLOUD_VERSION=24.0.0rc3
 ARG NEXTCLOUD_TAG=prereleases
