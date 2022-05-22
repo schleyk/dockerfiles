@@ -3,8 +3,8 @@ FROM alpine:3.15
 ARG BUILD_CORES
 
 ARG NGINX_VER=1.20.2
-ARG PHP_VER=8.0.18
-ARG LIBICONV_VERSION=1.16
+ARG PHP_VER=8.0.19
+ARG LIBICONV_VERSION=1.17
 ARG IMAGICK_VERSION=3.7.0
 #http://nginx.org/en/download.html
 #https://www.php.net/downloads.php
