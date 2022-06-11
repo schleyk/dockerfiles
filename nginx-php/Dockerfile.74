@@ -1,9 +1,9 @@
-FROM alpine:3.15
+FROM alpine:3.16
 
 ARG BUILD_CORES
 
-ARG NGINX_VER=1.20.2
-ARG PHP_VER=7.4.29
+ARG NGINX_VER=1.22.0
+ARG PHP_VER=7.4.30
 ARG LIBICONV_VERSION=1.17
 ARG IMAGICK_VERSION=3.7.0
 #http://nginx.org/en/download.html
@@ -159,7 +159,7 @@ RUN NB_CORES=${BUILD_CORES-$(getconf _NPROCESSORS_CONF)} \
     libwebp \
     libzip \
     gd \
-	libgomp \
+    libgomp \
     pcre \
     zlib \
     ${CUSTOM_PKGS} \

@@ -1,9 +1,9 @@
-FROM alpine:3.15
+FROM alpine:3.16
 
 ARG BUILD_CORES
 
-ARG NGINX_VER=1.20.2
-ARG PHP_VER=8.0.19
+ARG NGINX_VER=1.22.0
+ARG PHP_VER=8.0.20
 ARG LIBICONV_VERSION=1.17
 ARG IMAGICK_VERSION=3.7.0
 #http://nginx.org/en/download.html
@@ -154,8 +154,8 @@ RUN NB_CORES=${BUILD_CORES-$(getconf _NPROCESSORS_CONF)} \
     libedit \
     libxml2 \
     oniguruma \
-	libgomp \
-	libsodium \
+    libgomp \
+    libsodium \
     openssl \
     libwebp \
     libzip \
