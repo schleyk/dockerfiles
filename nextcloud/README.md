@@ -18,7 +18,9 @@
 - OPCache (opcocde), APCu (local) installed and configured.
 - system cron task running.
 - MySQL, PostgreSQL (server not built-in) and sqlite3 support.
-- Redis, FTP, SMB, LDAP(s), IMAP support.
+- OnlyOffice support (server not built-in).
+- ClamAV antivirus support (not built-in).
+- Redis, FTP, SMB, LDAP(s), IMAP, SMTP support.
 - GNU Libiconv for php iconv extension (avoiding errors with some apps).
 - No root processes. Never.
 - Environment variables provided (see below).
