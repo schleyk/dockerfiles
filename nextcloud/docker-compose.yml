@@ -1,89 +1,110 @@
-version: '3.5'
+version: '3.9'
 
 services:
-    nginx:
-      image: nginx:stable-alpine
-      restart: always
-      volumes:
-        - "./nginx/nextcloud.conf:/etc/nginx/conf.d/default.conf"
-        - "./nginx/logs:/logs"
-        - "./nginx/demo:/demo/"     # for Demo TLS starting
-#        - "/var/www/:/var/www"     # Need for ACME challange 
-#        - "../acme/certs:/certs"   # Need for acme.sh
-      links:
-        - nextcloud:nextcloud
-      ports:
-        - 80:80
-        - 443:443
+  nginx:
+    image: nginx:stable-alpine
+    restart: always
+    volumes:
+    - "./nginx/nextcloud.conf:/etc/nginx/conf.d/default.conf"
+    - "./nginx/logs:/logs"
+    - "./nginx/demo:/demo/"     # for Demo TLS starting
+#    - "/var/www/:/var/www"     # Need for ACME challange 
+#    - "../acme/certs:/certs"   # Need for acme.sh
+    links:
+    - nextcloud:nextcloud
+    ports:
+    - 80:80
+    - 443:443
 
-    nextcloud:
-      restart: always
-      image: schleyk/nextcloud:24
-      links:
-        - redis:redis
-        - db:mariadb
-      environment:
-        - CHECK_PERMISSIONS=1     # default 1 = fix data permissions,  0 = skip data permissions!
-        - UID=1000
-        - GID=1000
-        - UPLOAD_MAX_SIZE=10G
-        - APC_SHM_SIZE=128M
-        - OPCACHE_MEM_SIZE=128
-        - CRON_PERIOD=15m
-        - TZ=Europe/Berlin
-        - ADMIN_USER=admin         # Don't set to configure through browser
-        - ADMIN_PASSWORD=changeme!  # Don't set to configure through browser
-        - TRUSTED_PROXIES=10.0.0.0/8 192.168.0.0/16 172.16.0.0/12
-        - DOMAIN=cloud.example.org
-        - DB_TYPE=mysql
-        - DB_NAME=nextcloud
-        - DB_USER=nextcloud
-        - DB_PASSWORD=changeme!
-        - DB_HOST=db
-      volumes:
-        - ./nextcloud/data:/data
-        - ./nextcloud/config:/config
-        - ./nextcloud/apps:/apps2
-        - ./nextcloud/themes:/nextcloud/themes
-        - ./nextcloud/certs:/etc/ssl/private
-      depends_on:
-        - db
-        
-    redis:
-      image: redis:alpine
-      restart: always
-      volumes:
-        - ./nextcloud/redis:/data
-        
-    db:
-      image: mariadb:10.8
-      restart: always
-      volumes:
-        - ./nextcloud/db:/var/lib/mysql
-      environment:
-        - MYSQL_ROOT_PASSWORD=changeme!
-        - MYSQL_DATABASE=nextcloud
-        - MYSQL_USER=nextcloud
-        - MYSQL_PASSWORD=changeme!
+  nextcloud:
+    restart: always
+    image: schleyk/nextcloud:24
+    links:
+    - redis:redis
+    - db:mariadb
+    environment:
+    - CHECK_PERMISSIONS=1     # default 1 = fix data permissions,  0 = skip data permissions!
+    - UID=1000
+    - GID=1000
+    - UPLOAD_MAX_SIZE=10G
+    - APC_SHM_SIZE=128M
+    - OPCACHE_MEM_SIZE=128
+    - CRON_PERIOD=15m
+    - TZ=Europe/Berlin
+    - ADMIN_USER=admin         # Don't set to configure through browser
+    - ADMIN_PASSWORD=changeme!  # Don't set to configure through browser
+    - TRUSTED_PROXIES=10.0.0.0/8 192.168.0.0/16 172.16.0.0/12
+    - DOMAIN=cloud.example.org
+    - DB_TYPE=mysql
+    - DB_NAME=nextcloud
+    - DB_USER=nextcloud
+    - DB_PASSWORD=changeme!
+    - DB_HOST=db
+    volumes:
+#    - clamsocket:/var/run/clamav/
+    - ./nextcloud/data:/data
+    - ./nextcloud/config:/config
+    - ./nextcloud/apps:/apps2
+    - ./nextcloud/themes:/nextcloud/themes
+    - ./nextcloud/certs:/etc/ssl/private
+    depends_on:
+    - db
+      
+  redis:
+    image: redis:alpine
+    restart: always
+    volumes:
+    - ./nextcloud/redis:/data
+      
+  db:
+    image: mariadb:10.8
+    restart: always
+    volumes:
+    - ./nextcloud/db:/var/lib/mysql
+    environment:
+    - MYSQL_ROOT_PASSWORD=changeme!
+    - MYSQL_DATABASE=nextcloud
+    - MYSQL_USER=nextcloud
+    - MYSQL_PASSWORD=changeme!
 
-    onlyoffice:
-      image: onlyoffice/documentserver:latest
-      stdin_open: true
-      tty: true
-      restart: always
-      environment:
-       - JWT_ENABLED=true
-       - JWT_SECRET=changeme!
-      volumes:
-        - ./onlyoffice/data:/var/www/onlyoffice/Data
-        - ./onlyoffice/log:/var/log/onlyoffice
+  onlyoffice:
+    image: onlyoffice/documentserver:latest
+    stdin_open: true
+    tty: true
+    restart: always
+    environment:
+     - JWT_ENABLED=true
+     - JWT_SECRET=changeme!
+    volumes:
+      - ./onlyoffice/data:/var/www/onlyoffice/Data
+      - ./onlyoffice/log:/var/log/onlyoffice
 
-#    phpmyadmin:
-#      image: phpmyadmin/phpmyadmin
-#      environment:
-#        PMA_HOST: db
-#        UPLOAD_LIMIT: 300M
-#      ports:
-#        - "8181:80"
-#      depends_on:
-#        - db
+###############
+##  Fix Permission Issue inside ClamAV Container:
+##  docker-compose exec clamav chmod 777 /var/run/clamav/
+##  docker-compose down && docker-compose up -d
+##
+##  Add to Nextcloud: 
+## Install app AntiVirus and change AV Modus to "ClamAV-Daemon (Socket)" 
+## -> /var/run/clamav/clamd.sock
+##  
+#############
+  clamav:
+    image: "clamav/clamav:stable_base"
+    volumes:
+    - ./clamav/virus_db/:/var/lib/clamav/
+    - clamsocket:/var/run/clamav/
+    restart: always
+    
+volumes:
+  clamsocket: {}
+
+#  phpmyadmin:
+#    image: phpmyadmin/phpmyadmin
+#    environment:
+#      PMA_HOST: db
+#      UPLOAD_LIMIT: 300M
+#    ports:
+#      - "8181:80"
+#    depends_on:
+#      - db
