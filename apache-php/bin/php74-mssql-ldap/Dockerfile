@@ -3,7 +3,7 @@ FROM php:7.4.30-apache-buster
 ENV TZ "Europe/Berlin"
 ENV ACCEPT_EULA=Y
 ARG DEBIAN_FRONTEND=noninteractive
-ARG S6=3.1.0.1
+ARG S6=2.2.0.3
 
 # Update
 RUN apt-get -y update --fix-missing && \
