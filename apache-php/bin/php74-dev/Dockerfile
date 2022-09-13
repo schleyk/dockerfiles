@@ -23,8 +23,11 @@ RUN apt-get -y update && \
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # Install S6-overlay
-ADD https://github.com/just-containers/s6-overlay/releases/download/v$S6/s6-overlay-x86_64.tar.xz /tmp/
-RUN tar xvJf /tmp/s6-overlay-x86_64.tar.xz -C / && rm /tmp/s6-overlay-x86_64.tar.xz
+#ADD https://github.com/just-containers/s6-overlay/releases/download/v$S6/s6-overlay-x86_64.tar.xz /tmp/
+#RUN tar xvJf /tmp/s6-overlay-x86_64.tar.xz -C / && rm /tmp/s6-overlay-x86_64.tar.xz
+
+ADD https://github.com/just-containers/s6-overlay/releases/download/v$S6/s6-overlay-amd64.tar.gz /tmp/
+RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C / && rm /tmp/s6-overlay-amd64.tar.gz
 
 # Install xdebug
 #RUN pecl install xdebug-stable && \
