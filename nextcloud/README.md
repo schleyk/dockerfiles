@@ -19,6 +19,7 @@
 - system cron task running.
 - MySQL, PostgreSQL (server not built-in) and sqlite3 support.
 - OnlyOffice support (server not built-in).
+- Nextcloud Office with Collabora Online (server not built-in).
 - ClamAV antivirus support (not built-in).
 - Redis, FTP, SMB, LDAP(s), IMAP, SMTP support.
 - GNU Libiconv for php iconv extension (avoiding errors with some apps).
@@ -100,5 +101,3 @@ You will have to deploy a Solr server, I've shown an example above with docker-c
 
 ### Tip : how to use occ command
 There is a script for that, so you shouldn't bother to log into the container, set the right permissions, and so on. Just use `docker-compose exec nextcloud occ command`.
-
-

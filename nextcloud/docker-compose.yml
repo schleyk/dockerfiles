@@ -67,17 +67,26 @@ services:
     - MYSQL_USER=nextcloud
     - MYSQL_PASSWORD=changeme!
 
-  onlyoffice:
-    image: onlyoffice/documentserver:latest
-    stdin_open: true
-    tty: true
+  collabora:
     restart: always
+    image: collabora/code
+    tty: true
+    cap_add:
+    - MKNOD
     environment:
-     - JWT_ENABLED=true
-     - JWT_SECRET=changeme!
-    volumes:
-      - ./onlyoffice/data:/var/www/onlyoffice/Data
-      - ./onlyoffice/log:/var/log/onlyoffice
+    - "domain=cloud\\.example\\.org"
+
+#  onlyoffice:
+#    image: onlyoffice/documentserver:latest
+#    stdin_open: true
+#    tty: true
+#    restart: always
+#    environment:
+#     - JWT_ENABLED=true
+#     - JWT_SECRET=changeme!
+#    volumes:
+#      - ./onlyoffice/data:/var/www/onlyoffice/Data
+#      - ./onlyoffice/log:/var/log/onlyoffice
 
 ###############
 ##  Fix Permission Issue inside ClamAV Container:
