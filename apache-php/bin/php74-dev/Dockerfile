@@ -1,4 +1,4 @@
-FROM php:7.4.30-apache-bullseye
+FROM php:7.4.32-apache-bullseye
 
 ENV TZ "Europe/Berlin"
 ARG DEBIAN_FRONTEND=noninteractive
