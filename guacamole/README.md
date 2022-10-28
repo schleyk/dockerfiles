@@ -1,7 +1,7 @@
 [![Docker Pulls](https://img.shields.io/docker/pulls/schleyk/guacamole.svg)](https://hub.docker.com/r/schleyk/guacamole)
 
 ## Features
-- Based on tomcat:9.0.x-jdk8-adoptopenjdk-openj9 image.
+- Based on tomcat:9.0-jdk8-temurin-jammy image.
 - hide Tomcat version string.
 - Used https://github.com/apache/guacamole-client GitHub source.
 - Build Guacamole 1.4.0(stable) 
