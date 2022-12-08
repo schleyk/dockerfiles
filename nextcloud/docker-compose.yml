@@ -29,7 +29,7 @@ services:
     - UPLOAD_MAX_SIZE=10G
     - APC_SHM_SIZE=128M
     - OPCACHE_MEM_SIZE=128
-    - CRON_PERIOD=15m
+    - CRON_PERIOD=5m
     - TZ=Europe/Berlin
     - ADMIN_USER=admin         # Don't set to configure through browser
     - ADMIN_PASSWORD=changeme!  # Don't set to configure through browser
