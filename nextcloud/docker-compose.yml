@@ -28,7 +28,7 @@ services:
     - GID=1000
     - UPLOAD_MAX_SIZE=10G
     - APC_SHM_SIZE=128M
-    - OPCACHE_MEM_SIZE=128
+    - OPCACHE_MEM_SIZE=2048
     - CRON_PERIOD=5m
     - TZ=Europe/Berlin
     - ADMIN_USER=admin         # Don't set to configure through browser

@@ -11,7 +11,7 @@
 ### Features
 - Support for Nextcloud version 23 / 24 / 25.
 - Based on Alpine Linux 3.16.
-- Bundled with nginx and PHP 7.4 / 8.0 / 8.1 (schleyk/nginx-php image).
+- Bundled with nginx and PHP 7.4 / 8.0 / 8.1 / 8.2 (schleyk/nginx-php image).
 - Automatic installation using environment variables.
 - Package integrity (SHA512) and authenticity (PGP) checked during building process.
 - Data and apps persistence.
@@ -38,9 +38,9 @@ For security reasons, you should occasionally update the container, even if you 
 - **GID** : nextcloud group id *(default : 991)*
 - **UPLOAD_MAX_SIZE** : maximum upload size *(default : 10G)*
 - **APC_SHM_SIZE** : apc memory size *(default : 128M)*
-- **OPCACHE_MEM_SIZE** : opcache memory size in megabytes *(default : 128)*
+- **OPCACHE_MEM_SIZE** : opcache memory size in megabytes *(default : 2048)*
 - **MEMORY_LIMIT** : php memory limit *(default : 512M)*
-- **CRON_PERIOD** : time interval between two cron tasks *(default : 15m)*
+- **CRON_PERIOD** : time interval between two cron tasks *(default : 5m)*
 - **CRON_MEMORY_LIMIT** : memory limit for PHP when executing cronjobs *(default : 1024m)*
 - **TZ** : the system/log timezone *(default : Etc/UTC)*
 - **ADMIN_USER** : username of the admin account *(default : none, web configuration)*
