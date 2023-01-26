@@ -92,7 +92,8 @@ ARG PHP_EXT_LIST=" \
     ftp \
     exif \
     gmp \
-    imap"
+    imap \
+    sysvsem"
 
 ARG CUSTOM_BUILD_PKGS=" \
     freetype-dev \
