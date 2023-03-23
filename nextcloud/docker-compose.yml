@@ -18,7 +18,7 @@ services:
 
   nextcloud:
     restart: always
-    image: schleyk/nextcloud:24
+    image: schleyk/nextcloud:25
     links:
     - redis:redis
     - db:mariadb
@@ -49,13 +49,13 @@ services:
     - ./nextcloud/certs:/etc/ssl/private
     depends_on:
     - db
-      
+
   redis:
     image: redis:alpine
     restart: always
     volumes:
     - ./nextcloud/redis:/data
-      
+
   db:
     image: mariadb:10.8
     restart: always
@@ -87,27 +87,27 @@ services:
 #    volumes:
 #      - ./onlyoffice/data:/var/www/onlyoffice/Data
 #      - ./onlyoffice/log:/var/log/onlyoffice
-
+#
 ###############
-##  Fix Permission Issue inside ClamAV Container:
-##  docker-compose exec clamav chmod 777 /var/run/clamav/
-##  docker-compose down && docker-compose up -d
-##
-##  Add to Nextcloud: 
-## Install app AntiVirus and change AV Modus to "ClamAV-Daemon (Socket)" 
-## -> /var/run/clamav/clamd.sock
-##  
+#  Fix Permission Issue inside ClamAV Container:
+#  docker-compose exec clamav chmod 777 /var/run/clamav/
+#  docker-compose down && docker-compose up -d
+#
+#  Add to Nextcloud: 
+# Install app AntiVirus and change AV Modus to "ClamAV-Daemon (Socket)" 
+# -> /var/run/clamav/clamd.sock
+#  
 #############
-  clamav:
-    image: "clamav/clamav:stable_base"
-    volumes:
-    - ./clamav/virus_db/:/var/lib/clamav/
-    - clamsocket:/var/run/clamav/
-    restart: always
-    
-volumes:
-  clamsocket: {}
-
+#  clamav:
+#    image: "clamav/clamav:stable_base"
+#    volumes:
+#    - ./clamav/virus_db/:/var/lib/clamav/
+#    - clamsocket:/var/run/clamav/
+#    restart: always
+#    
+#volumes:
+#  clamsocket: {}
+#
 #  phpmyadmin:
 #    image: phpmyadmin/phpmyadmin
 #    environment:
