@@ -1,8 +1,55 @@
+# HACK - compile imagemagick package with --without-rsvg flag to work around #34755
+
+FROM schleyk/nginx-php:8.0 AS custom-imagemagick
+
+# Build deps
+RUN apk add --no-cache \
+  alpine-sdk grep \
+  chrpath fontconfig-dev freetype-dev ghostscript-dev lcms2-dev libheif-dev \
+  libjpeg-turbo-dev libpng-dev libjxl-dev librsvg-dev libtool libwebp-dev \
+  libx11-dev libxext-dev libxml2-dev perl-dev tiff-dev zlib-dev \
+  ghostscript-fonts graphviz
+
+# Make cache dir writable
+RUN mkdir -p /var/cache/distfiles && \
+  chmod a+w /var/cache/distfiles
+
+# Can't build packages as root
+RUN adduser -D -k /var/empty -h /var/tmp/apkbuild apkbuild
+USER apkbuild
+
+WORKDIR /var/tmp/apkbuild/imagemagick
+
+RUN abuild-keygen -a -n
+
+# Download matching APKBUILD of imagemagick for this Alpine version
+RUN \
+  set -x && \
+  . /etc/os-release && \
+  VERSION=$(printf '%s' "$VERSION_ID" | grep -Po '^\d+\.\d+') && \
+  wget -OAPKBUILD https://git.alpinelinux.org/aports/plain/community/imagemagick/APKBUILD?id=${VERSION}-stable
+
+# They moved the archived versions to another URL...
+RUN sed -i \
+  -e 's,--with-rsvg,--without-rsvg,' \
+  -e 's,https://imagemagick.org/archive/,https://imagemagick.org/archive/releases/,' \
+  APKBUILD
+
+RUN abuild
+
+##########################################
+
 FROM schleyk/nginx-php:8.0
 
 ARG NEXTCLOUD_VERSION=25.0.5
 ARG NEXTCLOUD_TAG=releases
 ARG GPG_nextcloud="2880 6A87 8AE4 23A2 8372  792E D758 99B9 A724 937A"
+
+COPY --from=custom-imagemagick /var/tmp/apkbuild/.abuild/*.pub /etc/apk/keys/
+COPY --from=custom-imagemagick /var/tmp/apkbuild/packages/ /root/packages/
+RUN set -ex; \
+    apk add --no-cache /root/packages/apkbuild/*/*.apk; \
+    rm -r /root/packages
 
 ENV UID=991 GID=991 \
     UPLOAD_MAX_SIZE=10G \
