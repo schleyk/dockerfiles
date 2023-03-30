@@ -1,0 +1,6 @@
+services:
+  hidden:
+    build: .
+    restart: always
+    ports:
+    - 9050:9050
