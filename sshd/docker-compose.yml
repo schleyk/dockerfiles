@@ -1,0 +1,8 @@
+services:
+  ssh:
+    restart: always
+    build: .
+    ports:
+    - 1337:1337
+    volumes:
+    - /mnt:/mnt
