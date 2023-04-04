@@ -4,7 +4,7 @@
 - Based on tomcat:9.0-jdk8-temurin-jammy image.
 - hide Tomcat version string.
 - Used https://github.com/apache/guacamole-client GitHub source.
-- Build Guacamole 1.4.0(stable) 
+- Build Guacamole 1.5.0(stable) 
 - Support LDAP(s)
 - Support custom Root-CAs for LDAP(s) with custom endrepoint (Source https://github.com/schleyk/dockerfiles/tree/master/guacamole)
 - Include plugins:
@@ -19,11 +19,9 @@ services:
   guacd:
     restart: always
     image: guacamole/guacd
-    depends_on:
-    - db
   guacamole:
     restart: always
-    image: schleyk/guacamole:1.4.0
+    image: schleyk/guacamole:1.5.0
     links:
     - guacd
     - db
