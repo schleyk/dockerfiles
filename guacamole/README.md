@@ -4,7 +4,7 @@
 - Based on tomcat:9.0-jdk8-temurin-jammy image.
 - hide Tomcat version string.
 - Used https://github.com/apache/guacamole-client GitHub source.
-- Build Guacamole 1.5.0
+- Build Guacamole 1.5
 - Support LDAP(s)
 - Support custom Root-CAs for LDAP(s) with custom endrepoint (Source https://github.com/schleyk/dockerfiles/tree/master/guacamole)
 - Include plugins:
@@ -18,12 +18,12 @@ version: '2.1'
 services:
   guacd:
     restart: always
-    image: schleyk/guacd:1.5.0
+    image: schleyk/guacd:stable
     depends_on:
     - db
   guacamole:
     restart: always
-    image: schleyk/guacamole:1.5.0
+    image: schleyk/guacamole:stable
     links:
     - guacd
     - db
@@ -74,7 +74,7 @@ https://www.cvedetails.com/vulnerability-list/vendor_id-45/product_id-887/versio
 ```guacadmin:guacadmin```
 
 - Create initdb.sql: 
-```docker run --rm schleyk/guacamole:1.5.0 /opt/guacamole/bin/initdb.sh --mysql > initdb.sql```
+```docker run --rm schleyk/guacamole:stable /opt/guacamole/bin/initdb.sh --mysql > initdb.sql```
 
 - Guacamole SSO for VNC, RDP, and SSH: https://guacamole.apache.org/releases/0.9.4/
 Username/password parameter tokens
