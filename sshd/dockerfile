@@ -6,7 +6,7 @@ RUN echo 'root:ubuntu' | chpasswd
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update && apt-get install -y \
-  openssh-server sudo screen htop &&\
+  openssh-server sudo screen htop nano wget curl iotop iftop  &&\
   rm -rf /var/lib/apt/lists/*
 
 # workdir for ssh
