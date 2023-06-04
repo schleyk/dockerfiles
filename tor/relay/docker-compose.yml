@@ -1,0 +1,8 @@
+services:
+  tor:
+    build: .
+    restart: always
+    volumes:
+    - ./tor:/etc/tor
+    ports:
+    - 9001:9001

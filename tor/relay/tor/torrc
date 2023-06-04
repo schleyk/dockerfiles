@@ -1,0 +1,7 @@
+Nickname RelayName
+ORPort 9001
+ExitRelay 0
+SocksPort 0
+DataDirectory /etc/tor/data
+Log notice file /etc/tor/notices.log
+ContactInfo tor-operator@tor.com

@@ -1,4 +1,4 @@
-FROM ubuntu:focal
+FROM ubuntu:jammy
 
 # Base packages
 RUN apt update && apt-get -y install nginx tor torsocks ntpdate libssl-dev && rm -rf /var/lib/apt/lists/*
