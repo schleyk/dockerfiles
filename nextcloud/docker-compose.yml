@@ -18,7 +18,7 @@ services:
 
   nextcloud:
     restart: always
-    image: schleyk/nextcloud:26
+    image: schleyk/nextcloud:27
     links:
     - redis:redis
     - db:mariadb
