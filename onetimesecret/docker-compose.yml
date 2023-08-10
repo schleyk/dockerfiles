@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: https://github.com/onetimesecret/onetimesecret.git#v0.11.0
+    restart: always
+    depends_on:
+      - redis
+    env_file:
+      - .env
+    volumes:
+      - ./etc/config:/app/etc/config:ro
+    entrypoint: ["./bin/entrypoint.sh"]
+    tty: true
+    command: ["bundle", "exec", "thin", "-R", "config.ru", "-a", "0.0.0.0", "-p", "7143", "start"]
+    ports:
+      - 7143:7143
+
+  redis:
+    image: redis:7.0-alpine
+    ports:
+      - 6379:6379
+    volumes:
+      - ./redis-data:/data
+      - ./etc/redis.conf:/usr/local/etc/redis/redis.conf
+

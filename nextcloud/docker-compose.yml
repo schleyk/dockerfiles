@@ -10,8 +10,6 @@ services:
     - "./nginx/demo:/demo/"     # for Demo TLS starting
 #    - "/var/www/:/var/www"     # Need for ACME challange 
 #    - "../acme/certs:/certs"   # Need for acme.sh
-    links:
-    - nextcloud:nextcloud
     ports:
     - 80:80
     - 443:443
@@ -19,9 +17,6 @@ services:
   nextcloud:
     restart: always
     image: schleyk/nextcloud:27
-    links:
-    - redis:redis
-    - db:mariadb
     environment:
     - CHECK_PERMISSIONS=1     # default 1 = fix data permissions,  0 = skip data permissions!
     - UID=1000
@@ -42,7 +37,6 @@ services:
     - DB_PASSWORD=changeme!
     - DB_HOST=db
     volumes:
-#    - clamsocket:/var/run/clamav/
     - ./nextcloud/data:/data
     - ./nextcloud/config:/config
     - ./nextcloud/apps:/apps2
@@ -90,24 +84,18 @@ services:
 #      - ./onlyoffice/log:/var/log/onlyoffice
 #
 ###############
-#  Fix Permission Issue inside ClamAV Container:
-#  docker-compose exec clamav chmod 777 /var/run/clamav/
-#  docker-compose down && docker-compose up -d
-#
-#  Add to Nextcloud: 
-# Install app AntiVirus and change AV Modus to "ClamAV-Daemon (Socket)" 
-# -> /var/run/clamav/clamd.sock
-#  
+##
+##  Add to Nextcloud: 
+## Install app AntiVirus and change AV Modus to "ClamAV-Daemon" 
+## -> Hostname "clamav" and port "3310"
+##  
 #############
 #  clamav:
 #    image: "clamav/clamav:stable_base"
 #    volumes:
 #    - ./clamav/virus_db/:/var/lib/clamav/
-#    - clamsocket:/var/run/clamav/
 #    restart: always
 #    
-#volumes:
-#  clamsocket: {}
 #
 #  phpmyadmin:
 #    image: phpmyadmin/phpmyadmin
