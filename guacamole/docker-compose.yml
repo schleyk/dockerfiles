@@ -3,12 +3,12 @@ version: '3.9'
 services:
   guacd:
     restart: always
-    image: schleyk/guacd:1.5
+    image: schleyk/guacd:stable
     depends_on:
     - db
   guacamole:
     restart: always
-    image: schleyk/guacamole:1.5
+    image: schleyk/guacamole:stable
     links:
     - guacd
     - db
