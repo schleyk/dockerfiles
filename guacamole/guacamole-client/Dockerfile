@@ -43,7 +43,7 @@ RUN    apt-get update                                \
     && add-apt-repository -y ppa:mozillateam/ppa
 
 # Explicitly prefer packages from the Firefox PPA
-COPY guacamole-docker/mozilla-firefox.pref /etc/apt/preferences.d/
+COPY guacamole-client-stable/guacamole-docker/mozilla-firefox.pref /etc/apt/preferences.d/
 
 # Install firefox browser for sake of JavaScript unit tests
 RUN apt-get update && apt-get install -y firefox
