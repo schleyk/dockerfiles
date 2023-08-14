@@ -21,4 +21,13 @@ ADD ./nginx.conf /etc/nginx/nginx.conf
 VOLUME /data
 WORKDIR /data
 
+# Create a new user tor
+ARG UID=1001
+ARG GID=1001
+RUN groupadd --gid $GID tor
+RUN useradd --system --create-home --shell /usr/sbin/nologin --uid $UID --gid $GID tor
+
+# Run with user tor
+USER tor
+
 ENTRYPOINT ["/init.sh"]

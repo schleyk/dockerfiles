@@ -10,5 +10,14 @@ RUN chmod +x /init.sh
 # Tor Config
 ADD ./torrc /etc/tor/torrc
 
+# Create a new user tor
+ARG UID=1001
+ARG GID=1001
+RUN groupadd --gid $GID tor
+RUN useradd --system --create-home --shell /usr/sbin/nologin --uid $UID --gid $GID tor
+
+# Run with user tor
+USER tor
+
 # Configuration files and data output folder
 ENTRYPOINT ["/init.sh"]
