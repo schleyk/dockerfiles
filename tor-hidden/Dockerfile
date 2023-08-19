@@ -1,7 +1,7 @@
 FROM ubuntu:mantic
 
 # Base packages
-RUN apt update && apt-get -y install tor torsocks ntpdate libssl-dev python3 pip && rm -rf /var/lib/apt/lists/*
+RUN apt update && apt-get -y install tor torsocks ntpdate libssl-dev nginx python3 pip && rm -rf /var/lib/apt/lists/*
 RUN pip install nyx --break-system-packages
 
 # Configure nginx logs to go to Docker log collection (via stdout/stderr)
