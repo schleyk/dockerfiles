@@ -1,14 +1,12 @@
-FROM ubuntu:jammy
+FROM ubuntu:mantic
 
 # Base packages
-RUN apt update && apt-get -y install tor torsocks ntpdate libssl-dev && rm -rf /var/lib/apt/lists/*
+RUN apt update && apt-get -y install tor torsocks ntpdate libssl-dev python3 pip && rm -rf /var/lib/apt/lists/*
+RUN pip install nyx
 
 # init script
 ADD ./init.sh /init.sh
 RUN chmod +x /init.sh
-
-# Tor Config
-ADD ./torrc /etc/tor/torrc
 
 # Create a new user tor
 ARG UID=1001

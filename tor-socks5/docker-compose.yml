@@ -1,6 +1,7 @@
 services:
   hidden:
-    build: .
+    #build: .
+    image: schleyk/tor:relay
     restart: always
     ports:
     - 9050:9050

@@ -1,4 +1,6 @@
 DataDirectory /tmp/tor
 SocksPolicy accept *
 SocksPort 0.0.0.0:9050
+ControlPort 9051
+CookieAuthentication 1
 Log notice stdout

@@ -1,7 +1,8 @@
-FROM ubuntu:jammy
+FROM ubuntu:mantic
 
 # Base packages
-RUN apt update && apt-get -y install tor torsocks ntpdate libssl-dev && rm -rf /var/lib/apt/lists/*
+RUN apt update && apt-get -y install tor torsocks ntpdate libssl-dev python3 pip && rm -rf /var/lib/apt/lists/*
+RUN pip install nyx
 
 # init script
 ADD ./init.sh /init.sh

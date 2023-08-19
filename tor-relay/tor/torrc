@@ -2,6 +2,8 @@ Nickname RelayName
 ORPort 9001
 ExitRelay 0
 SocksPort 0
+ControlPort 9051
+CookieAuthentication 1
 DataDirectory /etc/tor/data
 Log notice file /etc/tor/notices.log
 ContactInfo tor-operator@tor.com

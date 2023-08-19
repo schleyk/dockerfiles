@@ -1,4 +1,6 @@
 DataDirectory /tmp/tor
 HiddenServiceDir /data
 HiddenServicePort 80 127.0.0.1:8080
+ControlPort 9051
+CookieAuthentication 1
 Log notice stdout

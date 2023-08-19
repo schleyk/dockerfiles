@@ -1,6 +1,7 @@
 services:
   tor:
-    build: .
+    #build: .
+    image: schleyk/tor:relay
     restart: always
     volumes:
     - ./tor:/etc/tor

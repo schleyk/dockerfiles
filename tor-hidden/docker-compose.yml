@@ -1,6 +1,7 @@
 services:
   app:
-    build: .
+    #build: .
+    image: schleyk/tor:hidden
     restart: always
     volumes:
     - './data:/data'
