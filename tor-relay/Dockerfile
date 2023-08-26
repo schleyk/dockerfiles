@@ -1,4 +1,9 @@
-FROM ubuntu:mantic
+FROM debian:bookworm
+
+RUN apt update && apt-get -y install wget apt-transport-https ca-certificates gpg
+COPY tor.list /etc/apt/sources.list.d/
+ADD https://deb.torproject.org/torproject.org/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.asc /tmp/
+RUN cat /tmp/*.asc | gpg --dearmor | tee /usr/share/keyrings/tor-archive-keyring.gpg
 
 # Base packages
 RUN apt update && apt-get -y install tor torsocks ntpdate libssl-dev python3 pip && rm -rf /var/lib/apt/lists/*
