@@ -3,7 +3,7 @@ version: '3.8'
 services:
   app:
     build:
-      context: https://github.com/Luzifer/ots.git#v1.8.0
+      context: https://github.com/Luzifer/ots.git#v1.9.2
     restart: always
     env_file:
       - .env
