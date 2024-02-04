@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+#
+# This script extracts the pieces that we need to compile our bridge line.
+# This will have to do until the following bug is fixed:
+# <https://gitlab.torproject.org/tpo/core/tor/-/issues/29128>
+
+TOR_LOG=/var/log/tor/log
+PT_STATE=/var/lib/tor/pt_state/obfs4_bridgeline.txt
+
+if [ ! -r "$TOR_LOG" ]
+then
+    echo "Cannot read Tor's log file ${TOR_LOG}. This is a bug."
+    exit 1
+fi
+
+if [ ! -r "$PT_STATE" ]
+then
+    echo "Cannot read PT state file ${TOR_LOG}. This is a bug."
+    exit 1
+fi
+
+addr=$(grep 'Our IP Address has changed from' "$TOR_LOG" | \
+    sed 's/.* \([0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\); .*/\1/' | \
+    tail -1)
+
+if [ -z "$addr" ]; then
+    addr=$(grep 'External address seen and suggested by a directory authority:' "$TOR_LOG" | \
+        sed 's/.*: \([0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\)/\1/' | \
+        tail -1)
+fi
+
+port=$(grep "Registered server transport 'obfs4' at" "$TOR_LOG" | \
+    sed "s/.*:\([0-9]\{1,5\}\)'$/\1/" | \
+    tail -1)
+fingerprint=$(grep "Your Tor server's identity key *fingerprint is" "$TOR_LOG" | \
+    sed "s/.*\([0-9A-F]\{40\}\)'$/\1/" | \
+    tail -1)
+obfs4_args=$(grep '^Bridge obfs4' "$PT_STATE" | sed 's/.*\(cert=.*\)/\1/' | \
+    tail -1)
+
+if [[ "$addr" = "" || "$port" = "" || "$fingerprint" = "" || "$obfs4_args" = "" ]]
+then
+    echo "Could not create bridge line. Tor's log format may have changed. This is a bug."
+    exit 1
+fi
+
+echo "obfs4 ${addr}:${port} ${fingerprint} ${obfs4_args}"
