@@ -31,7 +31,8 @@
 version: "3.4"
 services:
   obfs4-bridge:
-    image: thetorproject/obfs4-bridge:latest
+#    image: thetorproject/obfs4-bridge:latest
+    image: schleyk/tor:obfs4
     networks:
       - obfs4_bridge_external_network
     environment:
