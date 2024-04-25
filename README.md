@@ -1,5 +1,5 @@
 | Docker Image        |      Tag                           |
 |---------------------|:----------------------------------:|
-| schleyk/nextcloud   | 26, 27, 28                         |
+| schleyk/nextcloud   | 27, 28, 29                         |
 | schleyk/guacamole   | stable                             |
 | schleyk/guacd       | stable                             |
