@@ -1,0 +1,63 @@
+version: '2'
+
+services:
+  nginx:
+    image: nginx:stable-alpine
+    restart: always
+    volumes:
+    - "./nginx/app.conf:/etc/nginx/conf.d/app.conf"
+    - "./nginx/demo:/demo/"     # for Demo TLS starting
+    ports:
+    - 443:443
+
+  freescout-app:
+    image: tiredofit/freescout
+    restart: always
+    links:
+    - freescout-db
+    volumes:
+    - ./data:/data
+    - ./logs/:/www/logs
+    environment:
+    - CONTAINER_NAME=freescout-app
+    - DB_HOST=freescout-db
+    - DB_NAME=freescout
+    - DB_USER=freescout
+    - DB_PASS=freescout
+    - SITE_URL=https://example.com
+    - ADMIN_EMAIL=admin@example.com
+    - ADMIN_PASS=freescout
+    - DISPLAY_ERRORS=FALSE
+    - TIMEZONE=Europe/​Berlin
+
+  freescout-db:
+    image: tiredofit/mariadb
+    volumes:
+      - ./db:/var/lib/mysql
+    environment:
+      - ROOT_PASS=password
+      - DB_NAME=freescout
+      - DB_USER=freescout
+      - DB_PASS=freescout
+    restart: always
+
+  freescout-db-backup:
+    image: tiredofit/db-backup
+    restart: always
+    links:
+     - freescout-db
+    volumes:
+      - ./dbbackup:/backup
+    environment:
+      - CONTAINER_NAME=freescout-db-backup
+      - DB_HOST=freescout-db
+      - DB_TYPE=mariadb
+      - DB_NAME=freescout
+      - DB_USER=freescout
+      - DB_PASS=freescout
+      - DB01_BACKUP_INTERVAL=1440
+      - DB01_BACKUP_BEGIN=0000
+      - DB_CLEANUP_TIME=8640
+      - COMPRESSION=BZ
+      - MD5=TRUE
+
