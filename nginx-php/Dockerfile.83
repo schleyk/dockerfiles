@@ -200,12 +200,21 @@ RUN NB_CORES=${BUILD_CORES-$(getconf _NPROCESSORS_CONF)} \
  && sed -i 's,\r,,g' /usr/local/bin/* \
 
 # ImageMagick
+# && chmod +x /usr/local/bin/docker-php-ext-* \
+# && apk add git imagemagick-libs imagemagick-dev imagemagick imagemagick-svg \
+# && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
+# && export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS" \
+# && pecl install imagick-${IMAGICK_VERSION} \
+# && docker-php-ext-enable imagick \
+# && apk add --no-cache --virtual .imagick-runtime-deps imagemagick imagemagick-svg \
+
  && chmod +x /usr/local/bin/docker-php-ext-* \
  && apk add git imagemagick-libs imagemagick-dev imagemagick imagemagick-svg \
  && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
  && export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS" \
- && pecl install imagick-${IMAGICK_VERSION} \
- && docker-php-ext-enable imagick \
+ && mkdir -p /usr/src/php/ext/imagick \
+ && curl -fsSL https://github.com/Imagick/imagick/archive/28f27044e435a2b203e32675e942eb8de620ee58.tar.gz | tar xvz -C "/usr/src/php/ext/imagick" --strip 1 \
+ && docker-php-ext-install imagick \
  && apk add --no-cache --virtual .imagick-runtime-deps imagemagick imagemagick-svg \
 
 ### Strip, clean, install modules
