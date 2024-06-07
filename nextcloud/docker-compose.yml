@@ -52,7 +52,7 @@ services:
     - ./nextcloud/redis:/data
 
   db:
-    image: mariadb:10.8
+    image: mariadb:11
     restart: always
     volumes:
     - ./nextcloud/db:/var/lib/mysql
