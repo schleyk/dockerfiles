@@ -1,5 +1,5 @@
 ## Features
-- based on Debian 12
+- based on alpine:3.19
 - install Tor from official apt source
 - not run as root
 - include nyx
@@ -7,6 +7,10 @@
 ## Install and Setup Tor Config
 chown -R 1001:1001 tor/
 chmod -R 700 tor/
+
+## Set Tor mode
+torrc.relay
+torrc.socks5
 
 ## nice to know
 docker-compose exec tor nyx

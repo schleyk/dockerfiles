@@ -1,10 +1,13 @@
 services:
   tor-relay:
     #build: .
-    image: schleyk/tor:relay
+    image: schleyk/tor:stable
     restart: always
     volumes:
     - ./tor:/etc/tor
     - /etc/sysctl.conf:/etc/sysctl.conf
     ports:
-    - 9001:9001
+#    - 9001:9001 # RELAY
+#    - 9050:9050 # SOCKS5
+#    - 9443:9443 # OBFS4
+#    - 8443:8443 # OBFS4

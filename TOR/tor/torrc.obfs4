@@ -1,0 +1,20 @@
+RunAsDaemon 0
+# We don't need an open SOCKS port.
+SocksPort 0
+BridgeRelay 1
+Nickname RelayUliBridge
+Log notice stdout
+ServerTransportPlugin obfs4 exec /usr/bin/obfs4proxy
+ExtORPort auto
+ServerTransportOptions obfs4 iat-mode=1
+DataDirectory /etc/tor/data
+Log notice file /etc/tor/notices.log
+
+# The variable "OR_PORT" is replaced with the OR port.
+ORPort 8443
+
+# The variable "PT_PORT" is replaced with the obfs4 port.
+ServerTransportListenAddr obfs4 0.0.0.0:9443
+
+# The variable "EMAIL" is replaced with the operator's email address.
+ContactInfo nope@torproject.org
