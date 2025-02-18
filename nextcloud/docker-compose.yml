@@ -14,7 +14,7 @@ services:
 
   nextcloud:
     restart: always
-    image: schleyk/nextcloud:29
+    image: schleyk/nextcloud:30
     environment:
     - CHECK_PERMISSIONS=1     # default 1 = fix data permissions,  0 = skip data permissions!
     - UID=1000

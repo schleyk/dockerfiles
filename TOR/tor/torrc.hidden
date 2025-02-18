@@ -1,0 +1,11 @@
+DataDirectory /tmp/tor
+ControlPort 9051
+CookieAuthentication 1
+Log notice stdout
+
+HiddenServiceDir /etc/tor/data/myhiddenservice.onion
+HiddenServicePort 80 192.168.75.80:80
+#HiddenServicePort 8181 192.168.75.80:8181
+
+#HiddenServiceDir /etc/tor/data/otherhiddenservice.onion
+#HiddenServicePort 80 192.168.75.81:80
