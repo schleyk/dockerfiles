@@ -1,0 +1,18 @@
+FROM debian:trixie
+
+# Install packages and cleanup
+RUN apt-get update && apt-get install -y \
+  openssh-server &&\
+  rm -rf /var/lib/apt/lists/*
+
+# copy config files
+COPY ./conf/group /etc/group
+COPY ./conf/passwd /etc/passwd
+COPY ./conf/shadow /etc/shadow
+COPY ./conf/sshd_config /etc/ssh/sshd_config
+
+# generate ssh keypair
+RUN ssh-keygen -A
+
+# Run sshd service
+CMD ["/usr/sbin/sshd", "-D", "-o", "ListenAddress=0.0.0.0"]

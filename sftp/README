@@ -1,0 +1,24 @@
+# SFTP Server with Public Key Authentication Only:
+This image provides a minimal SFTP server that only accepts SSH key authentication.
+default Unux user "sftp" is created automaticlly 
+uid: 1000 
+gid: 1000
+username: sftp
+
+# Instruction Create Folder Structure:
+mkdir -p data/sftp/{.ssh,data}
+touch data/sftp/.ssh/authorized_keys
+chown -R 0:0 data 
+chown -R 1000:1000 data/sftp/data
+
+# Add your public key to:
+"./data/sftp/.ssh/authorized_keys"
+
+# Connect sftp
+sftp server running at port 1337
+
+############################
+# !!!!!!!!!!!!!!!!!!!!!!!! #
+# Backup your ssh-key pair #
+# !!!!!!!!!!!!!!!!!!!!!!!! #
+############################
