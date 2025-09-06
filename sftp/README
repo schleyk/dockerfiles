@@ -22,3 +22,15 @@ sftp server running at port 1337
 # Backup your ssh-key pair #
 # !!!!!!!!!!!!!!!!!!!!!!!! #
 ############################
+
+# Uncomment "docker-compose.yml" volumes:
+./conf/sshd_config:/etc/ssh/sshd_config
+./key/:/etc/ssh/perm/
+
+# copy from inside the contaienr your ssh-host-keys from "/etc/ssh/" to "/etc/ssh/perm" folder:
+cp ssh_host_* perm/
+
+#change inside "./conf/sshd_config" HostKey to:
+HostKey /etc/ssh/perm/ssh_host_rsa_key
+HostKey /etc/ssh/perm/ssh_host_ecdsa_key
+HostKey /etc/ssh/perm/ssh_host_ed25519_key

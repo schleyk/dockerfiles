@@ -6,3 +6,6 @@ services:
     - 1337:1337
     volumes:
     - ./data:/sftp/
+#    - ./conf/sshd_config:/etc/ssh/sshd_config
+#    - ./key/:/etc/ssh/perm/
+
