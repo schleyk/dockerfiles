@@ -15,4 +15,4 @@ COPY ./conf/sshd_config /etc/ssh/sshd_config
 RUN ssh-keygen -A
 
 # Run sshd service
-CMD ["/usr/sbin/sshd", "-D", "-o", "ListenAddress=0.0.0.0"]
+CMD ["/usr/sbin/sshd", "-D", "-e", "-o", "ListenAddress=0.0.0.0"]
