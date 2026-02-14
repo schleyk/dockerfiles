@@ -1,4 +1,4 @@
-FROM alpine:3.22
+FROM alpine:3.23
 
 RUN apk upgrade --no-cache \
   && apk add --update --no-cache \
@@ -17,3 +17,6 @@ USER torrelay
 
 # Configuration files and data output folder
 ENTRYPOINT ["/init.sh"]
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD curl -fk https://217.160.98.239:9001 || exit 1
