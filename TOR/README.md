@@ -38,6 +38,8 @@ docker-compose exec tor nyx
 
 ##  Tuning /etc/sysctl.conf for network, memory and CPU load:
 ```
+sysctl -p /etc/sysctl.d/90-tor.conf
+
 net.ipv4.tcp_fin_timeout = 20
 net.ipv4.tcp_keepalive_time = 1200
 net.ipv4.tcp_syncookies = 1
@@ -45,6 +47,13 @@ net.ipv4.tcp_tw_reuse = 1
 net.ipv4.ip_local_port_range = 10000 65000
 net.ipv4.tcp_max_syn_backlog = 8192
 net.ipv4.tcp_max_tw_buckets = 5000
+
+net.netfilter.nf_conntrack_max = 524288
+net.netfilter.nf_conntrack_tcp_timeout_close_wait = 60
+net.netfilter.nf_conntrack_tcp_timeout_fin_wait = 60
+net.netfilter.nf_conntrack_tcp_timeout_time_wait = 60
+net.netfilter.nf_conntrack_tcp_timeout_established = 300
+
 
 ```
 ### if you run tor with min RAM:
