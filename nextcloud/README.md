@@ -9,8 +9,8 @@
 - https://github.com/nextcloud/server/milestones
 
 ### Features
-- Support for Nextcloud version 31 / 32
-- Based on Alpine Linux 3.22.
+- Support for Nextcloud version 32 / 33
+- Based on Alpine Linux 3.23.
 - Bundled with nginx and PHP 8.3 (schleyk/nginx-php image).
 - Automatic installation using environment variables.
 - Package integrity (SHA512) and authenticity (PGP) checked during building process.

@@ -2,9 +2,9 @@ FROM alpine:3.23
 
 ARG BUILD_CORES
 
-ARG NGINX_VER=1.28.2
+ARG NGINX_VER=1.28.3
 ARG PHP_VER=8.3.30
-ARG LIBICONV_VERSION=1.18
+ARG LIBICONV_VERSION=1.19
 ARG IMAGICK_VERSION=3.8.1
 #http://nginx.org/en/download.html
 #https://www.php.net/downloads.php
