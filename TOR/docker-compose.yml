@@ -11,3 +11,6 @@ services:
 #    - 9050:9050 # SOCKS5
 #    - 9443:9443 # OBFS4
 #    - 8443:8443 # OBFS4
+## need to disable Healthcheck if not run as relay
+#    healthcheck:
+#      disable: true
