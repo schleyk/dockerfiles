@@ -11,6 +11,14 @@ ARG IMAGICK_VERSION=3.8.1
 #https://ftp.gnu.org/pub/gnu/libiconv/
 #https://pecl.php.net/package/imagick
 
+# Allowed signing keys (full fingerprints, space separated)
+# nginx: https://nginx.org/en/pgp_keys.html (pluknet, arut, thresh, sb)
+ARG GPG_nginx="D6786CE303D9A9022998DC6CC8464D549AF75C0A 43387825DDB1BB97EC36BA5D007C8D7C15D87369 13C82A63B603576156E30A4EA0EA981B66B0D967 7338973069ED3F443F4D37DFA64FD5B17ADB39A8"
+# PHP 8.3 release managers: https://www.php.net/gpg-keys.php (Pierrick Charron, Jakub Zelenka, Eric Mann)
+ARG GPG_php="1198C0117593497A5EC5C199286AF1F9897469DC C28D937575603EB4ABB725861C0779DC5C0A9DE4 AFD8691FDAEDF03BDF6E460563F15A9B715376CA"
+# GNU libiconv maintainer (Bruno Haible)
+ARG GPG_libiconv="E0FFBD975397F77A32AB76ECB6301D9E1BBEAC08"
+
 LABEL description="nginx + php image based on Alpine" \
       maintainer="Schley <info@it-schley.eu>" \
       php_version="PHP v$PHP_VER built from source" \
@@ -167,11 +175,28 @@ RUN NB_CORES=${BUILD_CORES-$(getconf _NPROCESSORS_CONF)} \
     ${CUSTOM_PKGS} \
 
 ### Source downloading
- && wget http://nginx.org/download/nginx-${NGINX_VER}.tar.gz -O /tmp/nginx-${NGINX_VER}.tar.gz \
- && wget http://nginx.org/download/nginx-${NGINX_VER}.tar.gz.asc -O /tmp/nginx-${NGINX_VER}.tar.gz.asc \
+ && wget https://nginx.org/download/nginx-${NGINX_VER}.tar.gz -O /tmp/nginx-${NGINX_VER}.tar.gz \
+ && wget https://nginx.org/download/nginx-${NGINX_VER}.tar.gz.asc -O /tmp/nginx-${NGINX_VER}.tar.gz.asc \
  && wget ${PHP_MIRROR}/distributions/php-${PHP_VER}.tar.gz -O /tmp/php-${PHP_VER}.tar.gz \
  && wget ${PHP_MIRROR}/distributions/php-${PHP_VER}.tar.gz.asc -O /tmp/php-${PHP_VER}.tar.gz.asc \
- && wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-${LIBICONV_VERSION}.tar.gz -O /tmp/libiconv-${LIBICONV_VERSION}.tar.gz \
+ && wget https://ftp.gnu.org/pub/gnu/libiconv/libiconv-${LIBICONV_VERSION}.tar.gz -O /tmp/libiconv-${LIBICONV_VERSION}.tar.gz \
+ && wget https://ftp.gnu.org/pub/gnu/libiconv/libiconv-${LIBICONV_VERSION}.tar.gz.sig -O /tmp/libiconv-${LIBICONV_VERSION}.tar.gz.sig \
+
+### Source verification: valid signature AND signer in the pinned fingerprint list
+ && export GNUPGHOME="$(mktemp -d)" \
+ && for k in pluknet arut thresh sb; do wget -q https://nginx.org/keys/$k.key -O - | gpg -q --import; done \
+ && wget -q https://www.php.net/distributions/php-keyring.gpg -O - | gpg -q --import \
+ && wget -q https://ftp.gnu.org/gnu/gnu-keyring.gpg -O - | gpg -q --import \
+ && verify_sig() { \
+      FPR="$(LANG=C gpg --verify "$1" "$2" 2>&1 | sed -n 's#Primary key fingerprint: \(.*\)#\1#p' | tr -d ' ')"; \
+      if [ -z "$FPR" ]; then echo "Warning! Invalid GPG signature for $2!"; return 1; fi; \
+      case " $3 " in *" $FPR "*) echo "Signature OK for $2 ($FPR)";; *) echo "Warning! Unexpected GPG key $FPR for $2!"; return 1;; esac; \
+    } \
+ && verify_sig /tmp/nginx-${NGINX_VER}.tar.gz.asc /tmp/nginx-${NGINX_VER}.tar.gz "${GPG_nginx}" \
+ && verify_sig /tmp/php-${PHP_VER}.tar.gz.asc /tmp/php-${PHP_VER}.tar.gz "${GPG_php}" \
+ && verify_sig /tmp/libiconv-${LIBICONV_VERSION}.tar.gz.sig /tmp/libiconv-${LIBICONV_VERSION}.tar.gz "${GPG_libiconv}" \
+ && rm -rf "$GNUPGHOME" \
+
  && mkdir -p /php/conf.d \
  && mkdir -p /usr/src \
  && tar xzf /tmp/nginx-${NGINX_VER}.tar.gz -C /usr/src \
@@ -196,8 +221,8 @@ RUN NB_CORES=${BUILD_CORES-$(getconf _NPROCESSORS_CONF)} \
  && make -j ${NB_CORES} \
  && make install \
 
-# fix line endings so shebangs won't confuse the shell
- && sed -i 's,\r,,g' /usr/local/bin/* \
+# fix line endings so shebangs won't confuse the shell (safety net for Windows checkouts)
+ && sed -i 's,\r,,g' /usr/local/bin/* /etc/s6.d/*/* /etc/s6.d/.s6-svscan/* \
 
 # ImageMagick
 # && chmod +x /usr/local/bin/docker-php-ext-* \

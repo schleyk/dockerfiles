@@ -10,8 +10,8 @@
 
 ### Features
 - Support for Nextcloud version 33 / 34 / 35
-- Based on Alpine Linux 3.23.
-- Bundled with nginx and PHP 8.3 (schleyk/nginx-php image).
+- Based on Alpine Linux 3.24.
+- Bundled with nginx and PHP 8.3, 8.4 or 8.5 (schleyk/nginx-php image).
 - Automatic installation using environment variables.
 - Package integrity (SHA512) and authenticity (PGP) checked during building process.
 - Data and apps persistence.
@@ -21,13 +21,31 @@
 - OnlyOffice support (server not built-in).
 - Nextcloud Office with Collabora Online (server not built-in).
 - ClamAV antivirus support (not built-in).
-- Redis, FTP, SMB, LDAP(s), IMAP, SMTP support.
+- Redis, FTP, SMB, LDAP(s), IMAP, SMTP support (the PHP `imap` extension is only included with PHP 8.3, it was removed from PHP core in 8.4).
 - GNU Libiconv for php iconv extension (avoiding errors with some apps).
 - No root processes. Never.
 - Environment variables provided (see below).
 
 
 For security reasons, you should occasionally update the container, even if you have the latest version of Nextcloud.
+
+### Image variants
+Each Nextcloud version is available with several PHP versions. The Dockerfile name is `Dockerfile.<nextcloud>-php<php>`:
+
+| Nextcloud | PHP 8.3 | PHP 8.4 | PHP 8.5 |
+|-----------|---------|---------|---------|
+| 33        | ✓       | ✓       | ✓       |
+| 34        | ✓       | ✓       | ✓       |
+| 35        | ✓       | ✓       | ✓       |
+
+Build the base image first, then Nextcloud on top of it, for example:
+
+```
+docker build -f nginx-php/Dockerfile.85 -t schleyk/nginx-php:8.5 nginx-php
+docker build -f nextcloud/Dockerfile.35-php85 -t schleyk/nextcloud:35-php85 nextcloud
+```
+
+A `schleyk/nginx-php:8.6` base image (`nginx-php/Dockerfile.86`) exists, but there are no Nextcloud images for it yet: all current Nextcloud versions (33–35) refuse to start on PHP 8.6.
 
 ### Build-time variables
 - **NEXTCLOUD_VERSION** : version of nextcloud

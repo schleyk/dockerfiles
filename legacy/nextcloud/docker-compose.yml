@@ -1,0 +1,106 @@
+services:
+  nginx:
+    image: nginx:stable-alpine
+    restart: always
+    volumes:
+    - "./nginx/nextcloud.conf:/etc/nginx/conf.d/nextcloud.conf"
+    - "./nginx/logs:/logs"
+    - "./nginx/demo:/demo/"     # for Demo TLS starting
+#    - "/var/www/:/var/www"     # Need for ACME challange 
+#    - "../acme/certs:/certs"   # Need for acme.sh
+    ports:
+    - 80:80
+    - 443:443
+
+  nextcloud:
+    restart: always
+    image: schleyk/nextcloud:32
+    environment:
+    - CHECK_PERMISSIONS=1     # default 1 = fix data permissions,  0 = skip data permissions!
+    - UID=1000
+    - GID=1000
+    - UPLOAD_MAX_SIZE=10G
+    - APC_SHM_SIZE=128M
+    - OPCACHE_MEM_SIZE=2048
+    - MEMORY_LIMIT=512M
+    - CRON_PERIOD=5m
+    - TZ=Europe/Berlin
+    - ADMIN_USER=admin         # Don't set to configure through browser
+    - ADMIN_PASSWORD=changeme!  # Don't set to configure through browser
+    - TRUSTED_PROXIES=10.0.0.0/8 192.168.0.0/16 172.16.0.0/12
+    - DOMAIN=cloud.example.org
+    - DB_TYPE=mysql
+    - DB_NAME=nextcloud
+    - DB_USER=nextcloud
+    - DB_PASSWORD=changeme!
+    - DB_HOST=db
+    volumes:
+    - ./nextcloud/data:/data
+    - ./nextcloud/config:/config
+    - ./nextcloud/apps:/apps2
+    - ./nextcloud/themes:/nextcloud/themes
+    - ./nextcloud/certs:/etc/ssl/private
+    depends_on:
+    - db
+
+  redis:
+    image: redis:alpine
+    restart: always
+    volumes:
+    - ./nextcloud/redis:/data
+
+  db:
+    image: mariadb:11
+    restart: always
+    volumes:
+    - ./nextcloud/db:/var/lib/mysql
+    environment:
+    - MYSQL_ROOT_PASSWORD=changeme!
+    - MYSQL_DATABASE=nextcloud
+    - MYSQL_USER=nextcloud
+    - MYSQL_PASSWORD=changeme!
+
+  collabora:
+    restart: always
+    image: collabora/code
+    tty: true
+    cap_add:
+    - MKNOD
+    environment:
+    - "domain=cloud\\.example\\.org"
+
+#  onlyoffice:
+#    image: onlyoffice/documentserver:latest
+#    stdin_open: true
+#    tty: true
+#    restart: always
+#    environment:
+#     - JWT_ENABLED=true
+#     - JWT_SECRET=changeme!
+#    volumes:
+#      - ./onlyoffice/data:/var/www/onlyoffice/Data
+#      - ./onlyoffice/log:/var/log/onlyoffice
+#
+###############
+##
+##  Add to Nextcloud: 
+## Install app AntiVirus and change AV Modus to "ClamAV-Daemon" 
+## -> Hostname "clamav" and port "3310"
+##  
+#############
+#  clamav:
+#    image: "clamav/clamav:stable_base"
+#    volumes:
+#    - ./clamav/virus_db/:/var/lib/clamav/
+#    restart: always
+#    
+#
+#  phpmyadmin:
+#    image: phpmyadmin/phpmyadmin
+#    environment:
+#      PMA_HOST: db
+#      UPLOAD_LIMIT: 300M
+#    ports:
+#      - "8181:80"
+#    depends_on:
+#      - db

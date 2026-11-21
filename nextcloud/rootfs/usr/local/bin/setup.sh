@@ -8,7 +8,8 @@ CONFIGFILE=/config/config.php
 
 
 # Create an initial configuration file.
-instanceid=oc$(echo $PRIMARY_HOSTNAME | sha1sum | fold -w 10 | head -n 1)
+# Random per installation (Nextcloud format: "oc" + 10 lowercase alphanumerics)
+instanceid=oc$(head -c 64 /dev/urandom | sha1sum | cut -c1-10)
 cat > $CONFIGFILE <<EOF;
 <?php
 \$CONFIG = array (
@@ -92,6 +93,12 @@ include("/config/config.php");
 
 \$CONFIG['logtimezone'] = '$TZ';
 \$CONFIG['logdateformat'] = 'Y-m-d H:i:s';
+
+// Set the domain only where it belongs (instead of replacing every "localhost")
+\$CONFIG['trusted_domains'] = array(0 => '$DOMAIN');
+if (isset(\$CONFIG['overwrite.cli.url'])) {
+  \$CONFIG['overwrite.cli.url'] = str_replace('://localhost', '://$DOMAIN', \$CONFIG['overwrite.cli.url']);
+}
 EOF
 
 # TRUSTED_PROXIES="192.168.0.0/24 172.16.0.0/12 127.0.0.1"
@@ -121,8 +128,6 @@ EOF
 
 php $CONFIG_TEMP_SCRIPT > $CONFIG_TEMP && mv $CONFIG_TEMP $CONFIGFILE
 rm $CONFIG_TEMP_SCRIPT
-
-sed -i "s/localhost/$DOMAIN/g" /config/config.php
 
 chown -R $UID:$GID /config /data /apps2
 # Enable/disable apps. Note that this must be done after the ownCloud setup.

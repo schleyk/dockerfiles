@@ -61,7 +61,9 @@ RUN apk -U upgrade \
 
 COPY rootfs /
 
-RUN chmod +x /usr/local/bin/* /etc/s6.d/*/* /etc/s6.d/.s6-svscan/*
+RUN sed -i 's/\r$//' /usr/local/bin/* /etc/s6.d/*/* /etc/s6.d/.s6-svscan/* \
+ && if php -n -m | grep -qx "Zend OPcache"; then sed -i "/^zend_extension=opcache/d" /php/conf.d/opcache.ini; fi \
+ && chmod +x /usr/local/bin/* /etc/s6.d/*/* /etc/s6.d/.s6-svscan/*
 
 VOLUME /data /config /apps2 /nextcloud/themes
 
